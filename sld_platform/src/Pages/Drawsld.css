@@ -1,0 +1,55 @@
+#drawsldmain{
+    display: flex;
+    width: 10vw;
+    height: 100vh;
+    border-color: black;
+    border-width: 2px;
+}
+
+#drawsldblock{
+    border-width: 2px;
+    border-color: black;
+}
+
+.drawsldmain {
+  display: flex;    
+  height: 100vh;
+  background: #f1f5f9;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 260px;
+  background: #3B4953;
+  color: white;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-title {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #fdfdfd;
+  font-weight: 600;
+}
+
+/* Node blocks */
+.drawsldblock {
+  padding: 12px;
+  margin-bottom: 6px;
+  background: #5A7863;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.drawsldblock:hover {
+  background: #4e6454;
+}
+
+/* Canvas */
+.canvas {
+  flex: 1;
+  background: #e5e7eb;
+}

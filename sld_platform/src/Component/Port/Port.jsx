@@ -1,16 +1,18 @@
-import React from 'react'
-import { Circle } from 'react-konva'
 
-const Port = ({x,y,type,visible,onMouseDown}) => {
+import { Circle } from "react-konva";
+
+const Port = ({ x, y, onMouseDown }) => {
   return (
     <Circle
       x={x}
       y={y}
-      radius={5}
-      fill={type === "in" ? "green" : "blue"}
+      radius={6}
+      fill="#1976d2"
+      stroke="white"
+      strokeWidth={1}
       onMouseDown={onMouseDown}
     />
-  )
-}
+  );
+};
 
-export default Port
+export default Port;

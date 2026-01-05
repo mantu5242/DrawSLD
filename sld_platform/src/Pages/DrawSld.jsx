@@ -1,72 +1,3 @@
-// import React, { useState } from "react";
-// import { Stage, Layer } from "react-konva";
-// import "./DrawSld.css";
-
-// import BranchNode from "../Component/Symbols/BranchNode";
-// import PrsNode from "../Component/Symbols/PrsNode";
-// import ValveNode from "../Component/Symbols/ValveNode";
-// import EsdvNode from "../Component/Symbols/EsdvNode";
-// import SensorNode from "../Component/Symbols/SensorNode";
-
-// const DrawSld = () => {
-//   const [nodes, setNodes] = useState([]);
-
-//   const addNode = (type) => {
-//     const id = nodes.length + 1;
-//     const newNode = { id, type, x: 200, y: 100 };
-//     setNodes([...nodes, newNode]);
-//   };
-
-//   const renderNode = () => {
-//     switch (nodes) {
-//       case "BRANCH":
-//         console.log("branch is clicked")
-//         return <BranchNode x={200} y={100} selected={True} />;
-//       case "VALVE":
-//         return <ValveNode x={200} y={100} selected={True} />;
-//       case "PRS":
-//         return <EsdvNode x={200} y={100} selected={True} />
-//       case "QPS":
-//         return <PrsNode x={200} y={100} selected={True} />;
-//       case "SENSOR":
-//         return <SensorNode x={200} y={100} selected={True} />;
-//       case "ESDV":
-//         return <EsdvNode x={200} y={100} selected={True} />;
-//     //   case "":
-//     //     return <PrsNode x={200} y={100} selected={True} />;
-//       default:
-//         return null;
-//     }
-//   };
-
-//   return (
-//     <div className="drawsldmain">
-//       {/* Sidebar */}
-//       <div className="sidebar">
-//         <label className="sidebar-title">Nodes</label>
-
-//         {/* <div className="drawsldblock" onClick={() => addNode("BRANCH")}>Branch</div>
-//         <div className="drawsldblock" onClick={() => addNode("VALVE")}>Valve</div>
-//         <div className="drawsldblock" onClick={() => addNode("PRS")}>PRS</div>
-//         <div className="drawsldblock" onClick={() => addNode("PRS")} >QPS</div>
-//         <div className="drawsldblock" onClick={() => addNode("PRS")}>Sensor</div>
-//         <div className="drawsldblock" onClick={() => addNode("PRS")}>ESDV</div> */}
-//         <div className="drawsldblock" onClick={handleClick("PRS")} >QPS</div>
-//       </div>
-
-//       {/* Canvas */}
-//       <div className="canvas">
-//         <Stage width={window.innerWidth - 260} height={window.innerHeight}>
-//           <Layer>{renderNode()}</Layer>
-//         </Stage>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default DrawSld;
-
-
 import React, { useState } from "react";
 import { Stage, Layer } from "react-konva";
 import "./DrawSld.css";
@@ -76,15 +7,217 @@ import ValveNode from "../Component/Symbols/ValveNode";
 import EsdvNode from "../Component/Symbols/EsdvNode";
 import SensorNode from "../Component/Symbols/SensorNode";
 import BranchNode from "../Component/Symbols/BranchNode"
+import PipeArrow from "../Component/Symbols/PipeArrow";
+import TempEdge from "../Component/Symbols/TempEdge";
+import { hitTestNode,getNearestBoundaryPoint } from "../Component/Utils/Geometry";
+
 
 const DrawSld = () => {
   const [nodes, setNodes] = useState([]);
+  // const [edges, setEdges] = useState([]);
+  const [arrows, setArrows] = useState([]);
+  const [selectedArrow, setSelectedArrow] = useState(null);
+
+
+    // Add node
+
+  const addNode = (type) => {
+    setNodes([
+      ...nodes,
+      {
+        id: `n${nodes.length + 1}`,
+        type,
+        x: 200,
+        y: 100 + nodes.length * 120,
+      },
+    ]);
+  };
+
+const SIDE_OFFSET = 14;
+
+const onDragNode = (nodeId, x, y) => {
+  setNodes((prev) =>
+    prev.map((n) =>
+      n.id === nodeId ? { ...n, x, y } : n
+    )
+  );
+
+  setArrows((prev) =>
+    prev.map((a) => {
+      const updated = { ...a };
+
+      ["start", "end"].forEach((port) => {
+        const att = a[port].attachedTo;
+        if (att?.nodeId !== nodeId) return;
+
+        if (att.side === "left") {
+          updated[port] = { ...a[port], x };
+        }
+        if (att.side === "right") {
+          updated[port] = { ...a[port], x: x + 100 };
+        }
+        if (att.side === "top") {
+          updated[port] = { ...a[port], y };
+        }
+        if (att.side === "bottom") {
+          updated[port] = { ...a[port], y: y + 100 };
+        }
+      });
+
+      return updated;
+    })
+  );
+};
+
+const onDropOnNode = (arrowId, port, x, y) => {
+
+  // --------- prevent looop ------------
+  const otherPort = port === "start" ? "end" : "start";
+  const arrow = arrows.find((a) => a.id === arrowId);
+
+  if (arrow?.[otherPort]?.attachedTo?.nodeId === node.id) {
+    return; 
+  }
+// -------------------------------------------------
+  const node = nodes.find(
+    (n) =>
+      x >= n.x &&
+      x <= n.x + 100 &&
+      y >= n.y &&
+      y <= n.y + 100
+  );
+  if (!node) return;
+
+  const distances = {
+    left: Math.abs(x - node.x),
+    right: Math.abs(x - (node.x + 100)),
+    top: Math.abs(y - node.y),
+    bottom: Math.abs(y - (node.y + 100)),
+  };
+
+  const side = Object.keys(distances).reduce((a, b) =>
+    distances[a] < distances[b] ? a : b
+  );
+
+  // count existing connections on this side
+  const index = arrows.filter(
+    (a) =>
+      a[port].attachedTo?.nodeId === node.id &&
+      a[port].attachedTo?.side === side
+  ).length;
+
+  let snapX = x;
+  let snapY = y;
+
+  if (side === "left") {
+    snapX = node.x;
+    snapY = node.y + 20 + index * SIDE_OFFSET;
+  }
+  if (side === "right") {
+    snapX = node.x + 100;
+    snapY = node.y + 20 + index * SIDE_OFFSET;
+  }
+  if (side === "top") {
+    snapY = node.y;
+    snapX = node.x + 20 + index * SIDE_OFFSET;
+  }
+  if (side === "bottom") {
+    snapY = node.y + 100;
+    snapX = node.x + 20 + index * SIDE_OFFSET;
+  }
+
+  setArrows((prev) =>
+    prev.map((a) =>
+      a.id === arrowId
+        ? {
+            ...a,
+            [port]: {
+              x: snapX,
+              y: snapY,
+              attachedTo: { nodeId: node.id, side, index },
+            },
+          }
+        : a
+    )
+  );
+};
+
+
+  const updateNode = (id, x, y) => {
+    setNodes((prev) =>
+      prev.map((n) =>
+        n.id === id ? { ...n, x, y } : n
+      )
+    );
+
+    // Rubber update arrows
+    setArrows((prev) =>
+      prev.map((a) => {
+        const updatePort = (port) =>
+          port.attachedTo === id
+            ? {
+                ...getNearestBoundaryPoint(
+                  { x, y },
+                  port.x,
+                  port.y
+                ),
+                attachedTo: id
+              }
+            : port;
+
+        return {
+          ...a,
+          start: updatePort(a.start),
+          end: updatePort(a.end)
+        };
+      })
+    );
+  };
+
+  const addArrow = () => {
+    setArrows((prev) => [
+      ...prev,
+      {
+        id: `a${prev.length + 1}`,
+        start: { x: 300, y: 200, attachedTo: null },
+        end: { x: 450, y: 200, attachedTo: null }
+      }
+    ]);
+  };
+
+  const handlePortDrag = (arrowId, portType, x, y) => {
+    const node = hitTestNode(nodes, x, y);
+
+    setArrows((prev) =>
+      prev.map((a) => {
+        if (a.id !== arrowId) return a;
+
+        const port = node
+          ? {
+              ...getNearestBoundaryPoint(node, x, y),
+              attachedTo: node.id
+            }
+          : {
+              x,
+              y,
+              attachedTo: null
+            };
+
+        return {
+          ...a,
+          [portType]: port
+        };
+      })
+    );
+  };
+
+
   const renderNode = (node) => {
     switch (node.type) {
       case "PRS":
-        return <PrsNode key={node.id} x={node.x} y={node.y} selected={true}/>;
+        return <PrsNode key={node.id} x={node.x} y={node.y} selected={true} />;
       case "VALVE":
-        return <ValveNode key={node.id} x={node.x} y={node.y} selected={true} />;
+        return <ValveNode key={node.id} x={node.x} y={node.y} selected={true}/>;
       case "ESDV":
         return <EsdvNode key={node.id} x={node.x} y={node.y} selected={true} />;
       case "SENSOR":
@@ -109,13 +242,38 @@ const DrawSld = () => {
         <div className="drawsldblock" onClick={() => addNode("ESDV")}>ESDV</div>
         <div className="drawsldblock" onClick={() => addNode("SENSOR")}>Sensor</div>
         <div className="drawsldblock" onClick={() => addNode("VALVE")}>Valve</div>
+        <div className="drawsldblock" onClick={addArrow}>Pipe</div>
+
       </div>
 
     
       <div className="canvas">
-        <Stage width={window.innerWidth - 260} height={window.innerHeight}>
-          <Layer>{nodes.map((node) => renderNode(node))}</Layer>
-        </Stage>
+        <Stage
+      width={window.innerWidth - 260}
+      height={window.innerHeight}
+
+    >
+      <Layer>
+        {arrows.map((a) => (
+            <PipeArrow
+              key={a.id}
+              arrow={a}
+              selected={selectedArrow === a.id}
+              onSelect={setSelectedArrow}
+              onDragPort={handlePortDrag}
+            />
+          ))}
+
+        {/* NODES */}
+        {nodes.map((n) => (
+            <PrsNode
+              key={n.id}
+              node={n}
+              onDrag={updateNode}
+            />
+          ))}
+      </Layer>
+    </Stage>
       </div>
     </div>
   );
@@ -124,3 +282,4 @@ const DrawSld = () => {
 export default DrawSld;
 
   
+

@@ -1,42 +1,60 @@
-import React from 'react'
-import { Group, Rect, Text, Circle } from "react-konva";
+// Component/Symbols/PrsNode.jsx
+import { Group, Rect, Text } from "react-konva";
+import Port from "../Port/Port";
 
 
 
-const QpsNode = ({ x,y, selected }) => {
+const QpsNode = ({ node, selected, onDrag, onStartConnect }) => { 
+
   return (
-    <Group x={x} y={y}>
+    <Group
+      x={node.x}
+      y={node.y}
+      draggable
+      onDragMove={(e) =>
+        onDrag(node.id, e.target.x(), e.target.y())
+      }
+    >
       <Rect
-        width={120}
-        height={50}
-        fill="#0f172a"
-        cornerRadius={6}
-        stroke={selected ? "#38bdf8" : "#334155"}
+        width={100}
+        height={100}
+        fill="white"
+        stroke="black"
         strokeWidth={2}
+        cornerRadius={8}
       />
+
       <Text
         text="QPS"
-        fill="white"
-        fontSize={14}
-        x={40}
-        y={15}
+        width={100}
+        height={100}
+        align="center"
+        verticalAlign="middle"
       />
-      {/* Ports */}
-      <Circle x={0} y={25} radius={4} fill="green" />
-      <Circle x={120} y={25} radius={4} fill="red" />
+
+      {selected && (
+        <>
+          {/* IN port */}
+          <Port
+            x={0}
+            y={50}
+            // onMouseDown={() =>
+            //   onStartConnect(node.id)
+            // }
+          />
+
+          {/* OUT port */}
+          <Port
+            x={100}
+            y={50}
+            // onMouseDown={() =>
+            //   onStartConnect(node.id)
+            // }
+          />
+        </>
+      )}
     </Group>
   );
-}
+};
 
-export default QpsNode
-
-
-// import React from 'react'
-
-// const qpsNode = () => {
-//   return (
-//     <div>qpsNode</div>
-//   )
-// }
-
-// export default qpsNode
+export default QpsNode;

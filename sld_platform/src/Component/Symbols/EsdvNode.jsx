@@ -1,8 +1,17 @@
 import React from 'react'
 import { Stage, Layer, Group, Rect, Circle, Text } from 'react-konva';
-const EsdvNode = ({x,y,selected}) => {
+import Port from "../Port/Port";
+
+const EsdvNode = ({node, selected, onDrag, onStartConnect}) => {
   return (
-    <Group x={x} y={y} draggable>
+    <Group
+      x={node.x}
+      y={node.y}
+      draggable
+      onDragMove={(e) =>
+        onDrag(node.id, e.target.x(), e.target.y())
+      }
+    >
       <Rect
         width={100}
         height={100}
@@ -10,18 +19,37 @@ const EsdvNode = ({x,y,selected}) => {
         stroke="black"
         strokeWidth={2}
         cornerRadius={8}
-        // shadowBlur={10}
       />
 
       <Text
-        text="EsdvNode"
-        fill="black"
-        fontSize={14}
+        text="ESDV"
         width={100}
         height={100}
         align="center"
         verticalAlign="middle"
       />
+
+      {selected && (
+        <>
+          {/* IN port */}
+          <Port
+            x={0}
+            y={50}
+            // onMouseDown={() =>
+            //   onStartConnect?.(node.id)
+            // }
+          />
+
+          {/* OUT port */}
+          <Port
+            x={100}
+            y={50}
+            // onMouseDown={() =>
+            //   onStartConnect?.(node.id)
+            // }
+          />
+        </>
+      )}
     </Group>
   )
 }

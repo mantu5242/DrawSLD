@@ -7,8 +7,8 @@ import ValveNode from "../Component/Symbols/ValveNode";
 import EsdvNode from "../Component/Symbols/EsdvNode";
 import SensorNode from "../Component/Symbols/SensorNode";
 import BranchNode from "../Component/Symbols/BranchNode"
-import PipeArrow from "../Component/Symbols/PipeArrow";
-import TempEdge from "../Component/Symbols/TempEdge";
+import PipeArrow from "../Component/Symbols/PipeSymbols/PipeArrow";
+import QpsNode from "../Component/Symbols/qpsNode"
 import { hitTestNode,getNearestBoundaryPoint } from "../Component/Utils/Geometry";
 
 
@@ -33,6 +33,19 @@ const DrawSld = () => {
     ]);
   };
 
+//   setNodes([
+//   ...nodes,
+//   {
+//     id: `n${nodes.length + 1}`,
+//     type,
+//     x: 200,
+//     y: 100 + nodes.length * 120,
+//     width: 100,   // <- add width
+//     height: 100,  // <- add height
+//   },
+// ]);
+
+
 const SIDE_OFFSET = 14;
 
 const onDragNode = (nodeId, x, y) => {
@@ -50,17 +63,30 @@ const onDragNode = (nodeId, x, y) => {
         const att = a[port].attachedTo;
         if (att?.nodeId !== nodeId) return;
 
-        if (att.side === "left") {
-          updated[port] = { ...a[port], x };
-        }
+        // if (att.side === "left") {
+        //   updated[port] = { ...a[port], x };
+        // }
+        // if (att.side === "right") {
+        //   updated[port] = { ...a[port], x: x + 100 };
+        // }
+        // if (att.side === "top") {
+        //   updated[port] = { ...a[port], y };
+        // }
+        // if (att.side === "bottom") {
+        //   updated[port] = { ...a[port], y: y + 100 };
+        // }
+
         if (att.side === "right") {
-          updated[port] = { ...a[port], x: x + 100 };
+          updated[port] = { ...a[port], x: x + n.width }; 
+        }
+        if (att.side === "bottom") {
+          updated[port] = { ...a[port], y: y + n.height }; 
+        }
+        if(att.side === "left"){
+          update[port] = { ...a[port], x: x }
         }
         if (att.side === "top") {
           updated[port] = { ...a[port], y };
-        }
-        if (att.side === "bottom") {
-          updated[port] = { ...a[port], y: y + 100 };
         }
       });
 
@@ -114,7 +140,8 @@ const onDropOnNode = (arrowId, port, x, y) => {
     snapY = node.y + 20 + index * SIDE_OFFSET;
   }
   if (side === "right") {
-    snapX = node.x + 100;
+    // snapX = node.x + 100;
+    snapX = node.x + node.width;
     snapY = node.y + 20 + index * SIDE_OFFSET;
   }
   if (side === "top") {
@@ -122,7 +149,8 @@ const onDropOnNode = (arrowId, port, x, y) => {
     snapX = node.x + 20 + index * SIDE_OFFSET;
   }
   if (side === "bottom") {
-    snapY = node.y + 100;
+    // snapY = node.y + 100;
+    snapY = node.y + node.height;
     snapX = node.x + 20 + index * SIDE_OFFSET;
   }
 
@@ -213,19 +241,20 @@ const onDropOnNode = (arrowId, port, x, y) => {
 
 
   const renderNode = (node) => {
+    const commonProps = { node, onDrag: updateNode, selected: true };
     switch (node.type) {
       case "PRS":
-        return <PrsNode key={node.id} x={node.x} y={node.y} selected={true} />;
+        return <PrsNode key={node.id} {...commonProps}  />;
       case "VALVE":
-        return <ValveNode key={node.id} x={node.x} y={node.y} selected={true}/>;
+        return <ValveNode key={node.id} {...commonProps} />;
       case "ESDV":
-        return <EsdvNode key={node.id} x={node.x} y={node.y} selected={true} />;
+        return <EsdvNode key={node.id} {...commonProps}  />;
       case "SENSOR":
-        return <SensorNode key={node.id} x={node.x} y={node.y} selected={true} />;
+        return <SensorNode key={node.id} {...commonProps}  />;
       case "BRANCH":
-        return <BranchNode key={node.id} x={node.x} y={node.y} selected={true} />;
+        return <BranchNode key={node.id} {...commonProps} />;
       case "QPS":
-        return <QpsNode key={node.id} x={node.x} y={node.y} selected={true} />;
+        return <QpsNode key={node.id} {...commonProps} />;
       
       default:
         return null;
@@ -242,6 +271,7 @@ const onDropOnNode = (arrowId, port, x, y) => {
         <div className="drawsldblock" onClick={() => addNode("ESDV")}>ESDV</div>
         <div className="drawsldblock" onClick={() => addNode("SENSOR")}>Sensor</div>
         <div className="drawsldblock" onClick={() => addNode("VALVE")}>Valve</div>
+        <div className="drawsldblock" onClick={() => addNode("QPS")}>QPS</div>
         <div className="drawsldblock" onClick={addArrow}>Pipe</div>
 
       </div>
@@ -265,13 +295,14 @@ const onDropOnNode = (arrowId, port, x, y) => {
           ))}
 
         {/* NODES */}
-        {nodes.map((n) => (
+        {/* {nodes.map((n) => (
             <PrsNode
               key={n.id}
               node={n}
               onDrag={updateNode}
             />
-          ))}
+          ))} */}
+          {nodes.map((n) => renderNode(n))}
       </Layer>
     </Stage>
       </div>

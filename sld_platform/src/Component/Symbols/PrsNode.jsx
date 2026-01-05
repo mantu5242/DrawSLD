@@ -39,7 +39,7 @@ const PrsNode = ({ node, selected, onDrag, onStartConnect }) => {
             x={0}
             y={50}
             onMouseDown={() =>
-              onStartConnect(node.id)
+              onStartConnect?.(node.id)
             }
           />
 
@@ -47,9 +47,9 @@ const PrsNode = ({ node, selected, onDrag, onStartConnect }) => {
           <Port
             x={100}
             y={50}
-            onMouseDown={() =>
-              onStartConnect(node.id)
-            }
+            // onMouseDown={() =>
+            //   onStartConnect?.(node.id)
+            // }
           />
         </>
       )}

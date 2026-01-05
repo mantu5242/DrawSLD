@@ -35,18 +35,18 @@ const ValveNode = ({ node, selected, onDrag, onStartConnect }) => {
           <Port
             x={0}
             y={50}
-            onMouseDown={() =>
-              onStartConnect(node.id)
-            }
+            // onMouseDown={() =>
+            //   onStartConnect?.(node.id)
+            // }
           />
 
           {/* OUT port */}
           <Port
             x={100}
             y={50}
-            onMouseDown={() =>
-              onStartConnect(node.id)
-            }
+            // onMouseDown={() =>
+            //   onStartConnect?.(node.id)
+            // }
           />
         </>
       )}

@@ -2,7 +2,10 @@
 import { Group, Rect, Text } from "react-konva";
 import Port from "../Port/Port";
 
-const ValveNode = ({ node, selected, onDrag, onStartConnect }) => {
+
+
+const ValveNode = ({ node, onDrag, selected, onSelect }) => { 
+  const isSelected = selected?.type === 'node' && selected?.id === node.id;
   return (
     <Group
       x={node.x}
@@ -11,12 +14,16 @@ const ValveNode = ({ node, selected, onDrag, onStartConnect }) => {
       onDragMove={(e) =>
         onDrag(node.id, e.target.x(), e.target.y())
       }
+      onMouseDown={(e) => {
+        e.cancelBubble = true;
+        onSelect(node.id);
+      }}
     >
       <Rect
         width={100}
         height={100}
         fill="white"
-        stroke="black"
+        stroke={isSelected ? 'blue':'black'}
         strokeWidth={2}
         cornerRadius={8}
       />
@@ -29,11 +36,11 @@ const ValveNode = ({ node, selected, onDrag, onStartConnect }) => {
         verticalAlign="middle"
       />
 
-      {selected && (
+      {isSelected && (
         <>
           {/* IN port */}
           <Port
-            x={0}
+            x={0} 
             y={50}
             // onMouseDown={() =>
             //   onStartConnect?.(node.id)
@@ -44,9 +51,6 @@ const ValveNode = ({ node, selected, onDrag, onStartConnect }) => {
           <Port
             x={100}
             y={50}
-            // onMouseDown={() =>
-            //   onStartConnect?.(node.id)
-            // }
           />
         </>
       )}

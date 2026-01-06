@@ -6,7 +6,7 @@ const Port = ({ x, y, onMouseDown }) => {
     <Circle
       x={x}
       y={y}
-      radius={6}
+      radius={4}
       fill="#1976d2"
       stroke="white"
       strokeWidth={1}

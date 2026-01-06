@@ -17,6 +17,7 @@ const DrawSld = () => {
   // const [edges, setEdges] = useState([]);
   const [arrows, setArrows] = useState([]);
   const [selectedArrow, setSelectedArrow] = useState(null);
+  const [selected, setSelected] = useState({ type: null, id: null});
 
 
     // Add node
@@ -83,7 +84,7 @@ const onDragNode = (nodeId, x, y) => {
           updated[port] = { ...a[port], y: y + n.height }; 
         }
         if(att.side === "left"){
-          update[port] = { ...a[port], x: x }
+          updated[port] = { ...a[port], x: x }
         }
         if (att.side === "top") {
           updated[port] = { ...a[port], y };
@@ -101,17 +102,17 @@ const onDropOnNode = (arrowId, port, x, y) => {
   const otherPort = port === "start" ? "end" : "start";
   const arrow = arrows.find((a) => a.id === arrowId);
 
-  if (arrow?.[otherPort]?.attachedTo?.nodeId === node.id) {
-    return; 
-  }
-// -------------------------------------------------
+  // -------------------------------------------------
   const node = nodes.find(
     (n) =>
       x >= n.x &&
-      x <= n.x + 100 &&
-      y >= n.y &&
-      y <= n.y + 100
+    x <= n.x + 100 &&
+    y >= n.y &&
+    y <= n.y + 100
   );
+  if (arrow?.[otherPort]?.attachedTo?.nodeId === node.id) {
+    return; 
+  }
   if (!node) return;
 
   const distances = {
@@ -241,20 +242,32 @@ const onDropOnNode = (arrowId, port, x, y) => {
 
 
   const renderNode = (node) => {
-    const commonProps = { node, onDrag: updateNode, selected: true };
+    const commonProps = { node, onDrag: updateNode, selected: selected};
     switch (node.type) {
       case "PRS":
-        return <PrsNode key={node.id} {...commonProps}  />;
+        return <PrsNode key={node.id} {...commonProps} onSelect={(id) =>
+              setSelected({ type: "node", id })
+            } />;
       case "VALVE":
-        return <ValveNode key={node.id} {...commonProps} />;
+        return <ValveNode key={node.id} {...commonProps} onSelect={(id) =>
+              setSelected({ type: "node", id })
+            }/>;
       case "ESDV":
-        return <EsdvNode key={node.id} {...commonProps}  />;
+        return <EsdvNode key={node.id} {...commonProps} onSelect={(id) =>
+              setSelected({ type: "node", id })
+            } />;
       case "SENSOR":
-        return <SensorNode key={node.id} {...commonProps}  />;
+        return <SensorNode key={node.id} {...commonProps}  onSelect={(id) =>
+              setSelected({ type: "node", id })
+            }/>;
       case "BRANCH":
-        return <BranchNode key={node.id} {...commonProps} />;
+        return <BranchNode key={node.id} {...commonProps} onSelect={(id) =>
+              setSelected({ type: "node", id })
+            }/>;
       case "QPS":
-        return <QpsNode key={node.id} {...commonProps} />;
+        return <QpsNode key={node.id} {...commonProps} onSelect={(id) =>
+              setSelected({ type: "node", id })
+            }/>;
       
       default:
         return null;
@@ -279,8 +292,13 @@ const onDropOnNode = (arrowId, port, x, y) => {
     
       <div className="canvas">
         <Stage
-      width={window.innerWidth - 260}
-      height={window.innerHeight}
+          width={window.innerWidth - 260}
+          height={window.innerHeight}
+          onMouseDown={(e) => {
+            if(e.target === e.target.getStage()){
+              setSelected({type: null, id: null})
+            }
+          }}
 
     >
       <Layer>
@@ -288,8 +306,12 @@ const onDropOnNode = (arrowId, port, x, y) => {
             <PipeArrow
               key={a.id}
               arrow={a}
-              selected={selectedArrow === a.id}
-              onSelect={setSelectedArrow}
+              // selected={selectedArrow === a.id}
+              selected={selected}
+              onSelect={(id) =>
+                setSelected({ type: "edge", id })
+              }
+              // onSelect={setSelectedArrow}
               onDragPort={handlePortDrag}
             />
           ))}

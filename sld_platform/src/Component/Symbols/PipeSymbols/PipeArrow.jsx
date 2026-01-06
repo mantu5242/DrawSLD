@@ -7,8 +7,15 @@ const PipeArrow = ({
   onSelect,
   onDragPort
 }) => {
+
+  const isSelected =
+    selected?.type === "edge" && selected?.id === arrow.id;
+
   return (
-    <Group onClick={() => onSelect(arrow.id)} draggable>
+    <Group onMouseDown={(e) => {
+    e.cancelBubble = true;
+    onSelect(arrow.id);
+  }} draggable>
       <Arrow        
         points={[
           arrow.start.x,
@@ -23,7 +30,7 @@ const PipeArrow = ({
         pointerWidth={8}
       />
 
-      {selected && (
+      {isSelected && (
         <>
           {/* START PORT */}
           <Circle

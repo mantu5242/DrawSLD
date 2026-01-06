@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Stage, Layer } from "react-konva";
 import "./DrawSld.css";
 
@@ -10,6 +10,10 @@ import BranchNode from "../Component/Symbols/BranchNode"
 import PipeArrow from "../Component/Symbols/PipeSymbols/PipeArrow";
 import QpsNode from "../Component/Symbols/qpsNode"
 import { hitTestNode,getNearestBoundaryPoint } from "../Component/Utils/Geometry";
+
+let nodeCount = 0;
+let arrowCount = 0;
+
 
 
 const DrawSld = () => {
@@ -26,25 +30,13 @@ const DrawSld = () => {
     setNodes([
       ...nodes,
       {
-        id: `n${nodes.length + 1}`,
+        id: `n${nodeCount++}`,
         type,
         x: 200,
         y: 100 + nodes.length * 120,
       },
     ]);
   };
-
-//   setNodes([
-//   ...nodes,
-//   {
-//     id: `n${nodes.length + 1}`,
-//     type,
-//     x: 200,
-//     y: 100 + nodes.length * 120,
-//     width: 100,   // <- add width
-//     height: 100,  // <- add height
-//   },
-// ]);
 
 
 const SIDE_OFFSET = 14;
@@ -63,19 +55,6 @@ const onDragNode = (nodeId, x, y) => {
       ["start", "end"].forEach((port) => {
         const att = a[port].attachedTo;
         if (att?.nodeId !== nodeId) return;
-
-        // if (att.side === "left") {
-        //   updated[port] = { ...a[port], x };
-        // }
-        // if (att.side === "right") {
-        //   updated[port] = { ...a[port], x: x + 100 };
-        // }
-        // if (att.side === "top") {
-        //   updated[port] = { ...a[port], y };
-        // }
-        // if (att.side === "bottom") {
-        //   updated[port] = { ...a[port], y: y + 100 };
-        // }
 
         if (att.side === "right") {
           updated[port] = { ...a[port], x: x + n.width }; 
@@ -207,7 +186,7 @@ const onDropOnNode = (arrowId, port, x, y) => {
     setArrows((prev) => [
       ...prev,
       {
-        id: `a${prev.length + 1}`,
+        id: `a${arrowCount++}`,
         start: { x: 300, y: 200, attachedTo: null },
         end: { x: 450, y: 200, attachedTo: null }
       }
@@ -273,6 +252,46 @@ const onDropOnNode = (arrowId, port, x, y) => {
         return null;
     }
   };
+
+
+  // implement function to delete or remove an object using button ...............
+
+  useEffect(() => {
+  const handleKeyDown = (e) => {
+    if (e.key !== "Backspace" && e.key !== "Delete") return;
+    if (!selected) return;
+    console.log("nodes = ",nodeCount)
+console.log("arrow = ", arrowCount)
+    if (selected.type === "node") {
+      const nodeId = selected.id;
+
+      // remove node
+      setNodes(prev => prev.filter(n => n.id !== nodeId));
+
+      // remove connected arrows
+      setArrows(prev =>
+        prev.filter(
+          a =>
+            a.start.attachedTo?.nodeId !== nodeId &&
+            a.end.attachedTo?.nodeId !== nodeId
+        )
+      );
+    }
+
+    if (selected.type === "edge") {
+      const arrowId = selected.id;
+
+      setArrows(prev => prev.filter(a => a.id !== arrowId));
+    }
+
+    setSelected(null);
+  };
+
+  window.addEventListener("keydown", handleKeyDown);
+  return () => window.removeEventListener("keydown", handleKeyDown);
+}, [selected, setNodes, setArrows]);
+
+// -----------------------------------------------------------------------------
 
   return (
     <div className="drawsldmain">

@@ -8,14 +8,14 @@ const PipeArrow = ({
   onDragPort
 }) => {
 
-  const isSelected =
-    selected?.type === "edge" && selected?.id === arrow.id;
+  const isSelected = selected?.type === "edge" && selected?.id === arrow.id;
+  const isConnected = arrow.start.attachedTo || arrow.end.attachedTo;
 
   return (
     <Group 
     onMouseDown={(e) => { e.cancelBubble = true;
       onSelect(arrow.id); }} 
-      draggable
+      draggable = {!isConnected}
       onMouseEnter={(e) => e.target.getStage().container().style.cursor = 'move'}
       onMouseLeave={(e) => e.target.getStage().container().style.cursor = 'default'}
   

@@ -18,6 +18,8 @@ const BranchNode = ({ node, onDrag, selected, onSelect }) => {
         e.cancelBubble = true;
         onSelect(node.id);
       }}
+      onMouseEnter={(e) => e.target.getStage().container().style.cursor = 'move'}
+      onMouseLeave={(e) => e.target.getStage().container().style.cursor = 'default'}
     >
       <Rect
         width={100}

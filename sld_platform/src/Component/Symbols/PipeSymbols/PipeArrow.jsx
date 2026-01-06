@@ -12,10 +12,14 @@ const PipeArrow = ({
     selected?.type === "edge" && selected?.id === arrow.id;
 
   return (
-    <Group onMouseDown={(e) => {
-    e.cancelBubble = true;
-    onSelect(arrow.id);
-  }} draggable>
+    <Group 
+    onMouseDown={(e) => { e.cancelBubble = true;
+      onSelect(arrow.id); }} 
+      draggable
+      onMouseEnter={(e) => e.target.getStage().container().style.cursor = 'move'}
+      onMouseLeave={(e) => e.target.getStage().container().style.cursor = 'default'}
+  
+  >
       <Arrow        
         points={[
           arrow.start.x,

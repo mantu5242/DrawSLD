@@ -18,12 +18,44 @@ let arrowCount = 0;
 
 const DrawSld = () => {
   const [nodes, setNodes] = useState([]);
-  // const [edges, setEdges] = useState([]);
+  const [scale, setScale] = useState(1);
+  const [stagePos, setStagePos] = useState({ x: 0, y: 0 });
   const [arrows, setArrows] = useState([]);
   const [selectedArrow, setSelectedArrow] = useState(null);
   const [selected, setSelected] = useState({ type: null, id: null});
+  // const [isPanning, setIsPanning] = useState(false);
+  // const lastPosRef = React.useRef(null);
 
 
+
+
+  const handleWheel = (e) => {
+  e.evt.preventDefault();
+
+  const scaleBy = 1.05;
+  const stage = e.target.getStage();
+  const oldScale = scale;
+
+  const pointer = stage.getPointerPosition();
+
+  const mousePointTo = {
+    x: (pointer.x - stagePos.x) / oldScale,
+    y: (pointer.y - stagePos.y) / oldScale,
+  };
+
+  const direction = e.evt.deltaY > 0 ? -1 : 1;
+  const newScale =
+    direction > 0 ? oldScale * scaleBy : oldScale / scaleBy;
+
+  setScale(newScale);
+
+  const newPos = {
+    x: pointer.x - mousePointTo.x * newScale,
+    y: pointer.y - mousePointTo.y * newScale,
+  };
+
+  setStagePos(newPos);
+};
     // Add node
 
   const addNode = (type) => {
@@ -33,7 +65,7 @@ const DrawSld = () => {
         id: `n${nodeCount++}`,
         type,
         x: 200,
-        y: 100 + nodes.length * 120,
+        y: 100  // + nodes.length * 120,
       },
     ]);
   };
@@ -313,6 +345,13 @@ console.log("arrow = ", arrowCount)
         <Stage
           width={window.innerWidth - 260}
           height={window.innerHeight}
+          scaleX={scale}
+          scaleY={scale}
+          x={stagePos.x}
+          y={stagePos.y}
+          onWheel={handleWheel}
+          // onMouseMove={handleMouseMove}
+          // onMouseUp={handleMouseUp}
           onMouseDown={(e) => {
             if(e.target === e.target.getStage()){
               setSelected({type: null, id: null})
@@ -334,15 +373,6 @@ console.log("arrow = ", arrowCount)
               onDragPort={handlePortDrag}
             />
           ))}
-
-        {/* NODES */}
-        {/* {nodes.map((n) => (
-            <PrsNode
-              key={n.id}
-              node={n}
-              onDrag={updateNode}
-            />
-          ))} */}
           {nodes.map((n) => renderNode(n))}
       </Layer>
     </Stage>

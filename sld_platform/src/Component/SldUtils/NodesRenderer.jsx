@@ -4,7 +4,7 @@ import EsdvNode from "../../Component/Symbols/EsdvNode";
 import SensorNode from "../../Component/Symbols/SensorNode";
 import BranchNode from "../../Component/Symbols/BranchNode";
 import QpsNode from "../../Component/Symbols/qpsNode";
-import { createRef } from "react";
+import ConsumerNode from "../Symbols/ConsumerNode";
 
 
 
@@ -14,7 +14,8 @@ const NODE_MAP = {
   ESDV: EsdvNode,
   SENSOR: SensorNode,
   BRANCH: BranchNode,
-  QPS: QpsNode
+  QPS: QpsNode,
+  CONSUMER: ConsumerNode
 };
 
 const NodesRenderer = ({

@@ -1,4 +1,5 @@
 // Component/Symbols/PipeArrow.jsx
+import { useEffect, useRef } from "react";
 import { Group, Arrow, Circle } from "react-konva";
 
 const PipeArrow = ({
@@ -10,6 +11,22 @@ const PipeArrow = ({
   if (!arrow?.start || !arrow?.end) return null;
   const isSelected = selected?.type === "edge" && selected?.id === arrow.id;
   const isConnected = arrow.start.attachedTo || arrow.end.attachedTo;
+
+  // animated arrow  -------------
+  const lineRef = useRef();
+
+  useEffect(() => {
+    let offset = 0;
+
+    const anim = new window.Konva.Animation(() => {
+      offset -= 1;
+      lineRef.current.dashOffset(offset);
+    }, lineRef.current.getLayer());
+
+    anim.start();
+
+    return () => anim.stop();
+  }, []);
 
   return (
     <Group 
@@ -32,6 +49,8 @@ const PipeArrow = ({
         strokeWidth={3}
         pointerLength={8}
         pointerWidth={8}
+        ref={lineRef}
+        dash={[20, 10]}
       />
 
       {isSelected && (

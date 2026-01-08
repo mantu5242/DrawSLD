@@ -4,7 +4,7 @@ const Sidebar = ({ addNode, addArrow }) => (
   <div className="sidebar">
     <label className="sidebar-title">Nodes</label>
 
-    {["BRANCH", "ESDV", "PRS", "QPS", "SENSOR", "VALVE"].map(type => (
+    {["BRANCH","CONSUMER", "ESDV", "PRS", "QPS", "SENSOR", "VALVE"].map(type => (
       <div
         key={type}
         className="drawsldblock"

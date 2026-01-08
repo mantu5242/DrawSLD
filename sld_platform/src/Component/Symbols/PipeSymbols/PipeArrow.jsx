@@ -1,6 +1,7 @@
 // Component/Symbols/PipeArrow.jsx
 import { useEffect, useRef } from "react";
 import { Group, Arrow, Circle } from "react-konva";
+import { getOrthogonalPath } from "../../Utils/OrthogonalPath";
 
 const PipeArrow = ({
   arrow,
@@ -11,6 +12,7 @@ const PipeArrow = ({
   if (!arrow?.start || !arrow?.end) return null;
   const isSelected = selected?.type === "edge" && selected?.id === arrow.id;
   const isConnected = arrow.start.attachedTo || arrow.end.attachedTo;
+  const points = getOrthogonalPath(arrow.start, arrow.end)
 
   // animated arrow  -------------
   const lineRef = useRef();
@@ -28,6 +30,13 @@ const PipeArrow = ({
     return () => anim.stop();
   }, []);
 
+  // const arrowHeadPoints = [
+  //   points[points.length - 4],
+  //   points[points.length - 3],
+  //   points[points.length - 2],
+  //   points[points.length - 1]
+  // ]
+
   return (
     <Group 
     onMouseDown={(e) => { e.cancelBubble = true;
@@ -38,12 +47,13 @@ const PipeArrow = ({
   
   >
       <Arrow        
-        points={[
-          arrow.start.x,
-          arrow.start.y,
-          arrow.end.x,
-          arrow.end.y
-        ]}  
+        // points={[
+        //   arrow.start.x,
+        //   arrow.start.y,
+        //   arrow.end.x,
+        //   arrow.end.y
+        // ]}  
+        points={points}
         stroke="black"
         fill="black"
         strokeWidth={3}

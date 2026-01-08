@@ -3,7 +3,6 @@ import { Group, Rect, Text } from "react-konva";
 import Port from "../Port/Port";
 
 
-
 const BranchNode = ({ node, onDrag, selected, onSelect }) => { 
   const isSelected = selected?.type === 'node' && selected?.id === node.id;
   return (

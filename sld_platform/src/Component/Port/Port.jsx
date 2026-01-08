@@ -1,14 +1,15 @@
-
+// Component/Port/Port.jsx
 import { Circle } from "react-konva";
 
-const Port = ({ x, y, onMouseDown }) => {
+const Port = ({ x, y, radius = 6, visible = true, onMouseDown }) => {
+  if (!visible) return null;
   return (
     <Circle
       x={x}
       y={y}
-      radius={4}
-      fill="#1976d2"
-      stroke="white"
+      radius={radius}
+      fill="green"
+      stroke="black"
       strokeWidth={1}
       onMouseDown={onMouseDown}
     />

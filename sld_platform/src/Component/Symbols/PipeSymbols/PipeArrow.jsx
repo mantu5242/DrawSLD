@@ -7,7 +7,7 @@ const PipeArrow = ({
   onSelect,
   onDragPort
 }) => {
-
+  if (!arrow?.start || !arrow?.end) return null;
   const isSelected = selected?.type === "edge" && selected?.id === arrow.id;
   const isConnected = arrow.start.attachedTo || arrow.end.attachedTo;
 
@@ -27,8 +27,8 @@ const PipeArrow = ({
           arrow.end.x,
           arrow.end.y
         ]}  
-        stroke="green"
-        fill="green"
+        stroke="black"
+        fill="black"
         strokeWidth={3}
         pointerLength={8}
         pointerWidth={8}
@@ -41,7 +41,7 @@ const PipeArrow = ({
             x={arrow.start.x}
             y={arrow.start.y}
             radius={6}
-            fill="#1976d2"
+            fill="#1951d2ff"
             draggable
             onDragMove={(e) =>
               onDragPort(

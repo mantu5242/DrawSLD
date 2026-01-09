@@ -2,6 +2,7 @@
 import { useEffect, useRef } from "react";
 import { Group, Arrow, Circle } from "react-konva";
 import { getOrthogonalPath } from "../../Utils/OrthogonalPath";
+import { getWorldPointer } from "../../Utils/World";
 
 const PipeArrow = ({
   arrow,
@@ -30,35 +31,23 @@ const PipeArrow = ({
     return () => anim.stop();
   }, []);
 
-  // const arrowHeadPoints = [
-  //   points[points.length - 4],
-  //   points[points.length - 3],
-  //   points[points.length - 2],
-  //   points[points.length - 1]
-  // ]
-
   return (
     <Group 
     onMouseDown={(e) => { e.cancelBubble = true;
       onSelect(arrow.id); }} 
-      draggable = {!isConnected}
+      // draggable = {!isConnected}
+      
       onMouseEnter={(e) => e.target.getStage().container().style.cursor = 'move'}
       onMouseLeave={(e) => e.target.getStage().container().style.cursor = 'default'}
   
   >
-      <Arrow        
-        // points={[
-        //   arrow.start.x,
-        //   arrow.start.y,
-        //   arrow.end.x,
-        //   arrow.end.y
-        // ]}  
+      <Arrow         
         points={points}
-        stroke="black"
-        fill="black"
+        stroke={arrow.stroke || "black"}
+        fill={arrow.stroke || "black"}
         strokeWidth={3}
         pointerLength={8}
-        pointerWidth={8}
+        pointerWidth={8}  
         ref={lineRef}
         dash={[20, 10]}
       />
@@ -72,14 +61,22 @@ const PipeArrow = ({
             radius={6}
             fill="#1951d2ff"
             draggable
-            onDragMove={(e) =>
+            onDragMove={(e) =>{
+              const stage = e.target.getStage();
+              const absPos = getWorldPointer(stage);
+
+              e.target.position({
+                x: arrow.start.x,
+                y: arrow.start.y
+              }); 
               onDragPort(
                 arrow.id,
                 "start",
-                e.target.x(),
-                e.target.y(),
-                true
-              )
+                absPos.x,
+                absPos.y,
+                // true
+              );
+            }
 
             }
             
@@ -92,14 +89,23 @@ const PipeArrow = ({
             radius={6}
             fill="#1976d2"
             draggable
-            onDragMove={(e) =>
+            onDragMove={(e) =>{
+              const stage = e.target.getStage();
+              const absPos = getWorldPointer(stage);
+
+              e.target.position({
+                x: arrow.end.x,
+                y: arrow.end.y
+              }); 
               onDragPort(
                 arrow.id,
                 "end",
-                e.target.x(),
-                e.target.y(),
-                true
-              )
+                absPos.x,
+                absPos.y,
+                // true
+              );
+            }
+
             }
             
           />

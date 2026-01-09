@@ -24,7 +24,7 @@ export const UseNodes = () => {
     setNodes(prev =>
       prev.map(n => n.id === id ? { ...n, x, y } : n)
     );
-    
+    console.log("position of the node",x, y)
     // syncArrowsWithNode({ id, x, y, width, height });
 
   };

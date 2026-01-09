@@ -13,15 +13,67 @@ export const useArrow = (nodes) => {
       ...prev,
       {
         id: `a${arrowCount++}`,
-        start: { x: 300, y: 200, attachedTo: null },
-        end: { x: 450, y: 200, attachedTo: null }
+        // start: { x: 300, y: 200, attachedTo: null },
+        // end: { x: 450, y: 200, attachedTo: null },
+        start: { x: 240, y: 41, attachedTo: null },
+        end: { x: 390, y: 41, attachedTo: null },
+        stroke: "#000000"
       }
     ]);
+  };
+
+  /* ---------------- UPDATE ARROW COLOR ----------- */
+  const updateArrowColor = (arrowId, color) => {
+    setArrows(prev =>
+      prev.map(a =>
+        a.id === arrowId
+          ? { ...a, stroke: color }
+          : a
+      )
+    );
+  };
+
+
+
+
+  // ------------- Snapping Logic ---------------
+
+  const getSnapPoint = (node, side, index) => {
+    const padding = 20;
+    const spacing = SIDE_OFFSET;
+
+    switch (side) {
+      case "left":
+        return {
+          x: node.x,
+          y: node.y + padding + index * spacing
+        };
+      case "right":
+        return {
+          x: node.x + node.width,
+          y: node.y + padding + index * spacing
+        };
+      case "top":
+        return {
+          x: node.x + padding + index * spacing,
+          y: node.y
+        };
+      case "bottom":
+        return {
+          x: node.x + padding + index * spacing,
+          y: node.y + node.height
+        };
+      default:
+        return { x: node.x, y: node.y };
+    }
   };
 
   /* ---------------- PORT DRAG ---------------- */
   const updateArrowPort = (arrowId, port, x, y) => {
     const node = hitTestNode(nodes, x, y);
+    console.log("port data",port)
+    console.log("node data",node)
+    console.log("coordinate of ports", x, y);
 
     setArrows(prev =>
       prev.map(a => {
@@ -40,18 +92,6 @@ export const useArrow = (nodes) => {
         if (a[otherPort]?.attachedTo?.nodeId === node.id) {
           return a;
         }
-
-        // Detect closest side
-        // const distances = {
-        //   left: Math.abs(x - node.x),
-        //   right: Math.abs(x - (node.x + node.width)),
-        //   top: Math.abs(y - node.y),
-        //   bottom: Math.abs(y - (node.y + node.height))
-        // };
-
-        // const side = Object.keys(distances).reduce((a, b) =>
-        //   distances[a] < distances[b] ? a : b
-        // );
 
         const cx = node.x + node.width / 2;
         const cy = node.y + node.height / 2;
@@ -79,106 +119,13 @@ export const useArrow = (nodes) => {
             ar.id !== arrowId
             ).length;
 
-
-    // Snapping logic ...................
-
-        // let snapX = x;
-        // let snapY = y;
-
-        // if (side === "left") {
-        //   snapX = node.x;
-        //   snapY = node.y + 20 + index * SIDE_OFFSET;
-        // }
-        // if (side === "right") {
-        //   snapX = node.x + node.width;
-        //   snapY = node.y + 20 + index * SIDE_OFFSET;
-        // }
-        // if (side === "top") {
-        //   snapY = node.y;
-        //   snapX = node.x + 20 + index * SIDE_OFFSET;
-        // }
-        // if (side === "bottom") {
-        //   snapY = node.y + node.height;
-        //   snapX = node.x + 20 + index * SIDE_OFFSET;
-        // }
-
-        // const padding = 20;
-        // const spacing = SIDE_OFFSET;
-
-        // switch (side) {
-        //     case "left":
-        //     return {
-        //         x: node.x,
-        //         y: node.y + padding + index * spacing
-        //     };
-
-        //     case "right":
-        //     return {
-        //         x: node.x + node.width,
-        //         y: node.y + padding + index * spacing
-        //     };
-
-        //     case "top":
-        //     return {
-        //         x: node.x + padding + index * spacing,
-        //         y: node.y
-        //     };
-
-        //     case "bottom":
-        //     return {
-        //         x: node.x + padding + index * spacing,
-        //         y: node.y + node.height
-        //     };
-        // }
-      
-
-
-        const getSnapPoint = (node, side, index) => {
-            const padding = 20;
-            const spacing = SIDE_OFFSET;
-
-            switch (side) {
-              case "left":
-                return {
-                  x: node.x,
-                  y: node.y + padding + index * spacing
-                };
-              case "right":
-                return {
-                  x: node.x + node.width,
-                  y: node.y + padding + index * spacing
-                };
-              case "top":
-                return {
-                  x: node.x + padding + index * spacing,
-                  y: node.y
-                };
-              case "bottom":
-                return {
-                  x: node.x + padding + index * spacing,
-                  y: node.y + node.height
-                };
-              default:
-                return { x: node.x, y: node.y };
-            }
-          };
-
         const snap = getSnapPoint(node, side, index);
+        console.log(index)
 
         return {
-          // ...a,
-          // [port]: {
-          //   x: snapX,
-          //   y: snapY,
-          //   attachedTo: {
-          //     nodeId: node.id,
-          //     side,
-          //     index
-          //   }
-          // }
           ...a,
           [port]: {
-            ...snap,
+            ...snap,  
             attachedTo: {
               nodeId: node.id,
               side,
@@ -187,7 +134,7 @@ export const useArrow = (nodes) => {
           }
         };
 
-        
+
       })
     );
   };
@@ -235,6 +182,7 @@ export const useArrow = (nodes) => {
     updateArrowPort,
     syncArrowsWithNode,
     removeArrow,
+    updateArrowColor,
     cleanupNodeArrows
   };
 };

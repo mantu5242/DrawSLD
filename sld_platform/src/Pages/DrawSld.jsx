@@ -439,6 +439,7 @@ import SldStage from "../Component/SldUtils/SldStage";
 import { UseNodes } from "../Component/Hooks/UseNode";
 import { useArrow } from "../Component/Hooks/UseArrow";
 import { UseKeyDelete } from "../Component/Hooks/UseKeyDelete";
+import { useStageTransform } from "../Component/Hooks/UseStageTranformer";
 
 const DrawSld = () => {
   const [selected, setSelected] = useState({ type: null, id: null });
@@ -456,6 +457,7 @@ const DrawSld = () => {
     addArrow,
     updateArrowPort,
     removeArrow,
+    updateArrowColor,
     cleanupNodeArrows,
     syncArrowsWithNode
   } = useArrow(nodes);
@@ -486,12 +488,21 @@ const handleResizeNode = (id, x, y, w, h) => {
 };
 
 
-  // const stageTransform = useStageTransform();
+  const stageTransform = useStageTransform();
   UseKeyDelete(selected, removeNode, removeArrow, cleanupNodeArrows, setSelected);
 
   return (
     <div className="drawsldmain">
-      <Sidebar addNode={addNode} addArrow={addArrow} />
+      <Sidebar 
+        addNode={addNode} 
+        addArrow={addArrow} 
+        selected={selected}
+        onEdgeColorChange={(color) => {
+          if (selected?.type === "edge") {
+            updateArrowColor(selected.id, color);
+          }
+        }}
+      />
 
       <SldStage
         nodes={nodes}
@@ -501,7 +512,7 @@ const handleResizeNode = (id, x, y, w, h) => {
         updateNode={handleUpdateNode}
         resizeNode={handleResizeNode}
         updateArrowPort={updateArrowPort}
-        // {...stageTransform}
+        {...stageTransform}
       />
     </div>
   );

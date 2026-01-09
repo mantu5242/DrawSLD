@@ -31,12 +31,6 @@ export function getNearestBoundaryPoint(node, x, y) {
 export function hitTestNode(nodes, x, y) {
   for (const node of nodes) {
     if 
-    // (
-    //   x >= node.x &&
-    //   x <= node.x + NODE_WIDTH &&
-    //   y >= node.y &&
-    //   y <= node.y + NODE_HEIGHT
-    // ) 
     (
       x >= node.x &&
       x <= node.x + (node.width || 100) &&

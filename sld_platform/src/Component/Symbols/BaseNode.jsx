@@ -23,6 +23,7 @@ const BaseNode = ({ node, onDrag, onResize, selected, onSelect, type, children }
     { x: 0, y: node.height / 2, cursor: "w-resize" }, // left
   ];
 
+  // Resizing of the nodes
   const handleDrag = (index, e) => {
     let newWidth = node.width;
     let newHeight = node.height;

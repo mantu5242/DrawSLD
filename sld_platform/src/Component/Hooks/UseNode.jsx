@@ -6,7 +6,18 @@ let nodeCount = 0;
 export const UseNodes = () => {
   const [nodes, setNodes] = useState([]);
 
+  const Node_def = {
+    PRS : {width:80, height: 60},
+    QPS : {width: 100, height: 80},
+    ESDV : {width: 60, height: 30},
+    CONSUMER: {width: 70, height: 60},
+    BRANCH: {radius: 20},
+    VALVE: {width:60, height: 30},
+    SENSOR: {width:60, height: 30}
+  }
+
   const addNode = (type) => {
+    const def = Node_def[type];
     setNodes(prev => [
       ...prev,
       {
@@ -14,8 +25,7 @@ export const UseNodes = () => {
         type,
         x: 200,
         y: 100,
-        width: 100,
-        height: 100
+        ...def
       }
     ]);
   };
@@ -25,27 +35,16 @@ export const UseNodes = () => {
       prev.map(n => n.id === id ? { ...n, x, y } : n)
     );
     console.log("position of the node",x, y)
-    // syncArrowsWithNode({ id, x, y, width, height });
 
   };
 
-  const resizeNode = (id, x, y, width, height) => {
+  const resizeNode = (id, x, y, width, height, radius) => {
     setNodes(prev =>
       prev.map(n =>
-        n.id === id ? { ...n, x, y, width, height } : n
+        n.id === id ? { ...n, x, y, width, height, radius } : n
       )
     );
-    // syncArrowsWithNode({ id, x, y, width: w, height: h });
   };
-    // const updateNode = (id, x, y) => {
-    //     setNodes(...);
-    //     syncArrowsWithNode({ id, x, y, width, height });
-    //     };
-
-    // const resizeNode = (id, x, y, w, h) => {
-    // setNodes(...);
-    // syncArrowsWithNode({ id, x, y, width: w, height: h });
-    // };
 
   const removeNode = (id) => {
     setNodes(prev => prev.filter(n => n.id !== id));

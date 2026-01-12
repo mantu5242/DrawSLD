@@ -35,7 +35,7 @@ const PipeArrow = ({
     <Group 
     onMouseDown={(e) => { e.cancelBubble = true;
       onSelect(arrow.id); }} 
-      // draggable = {!isConnected}
+      // draggable = {!isConnected}     // disable for proper working of snapping and dragging
       
       onMouseEnter={(e) => e.target.getStage().container().style.cursor = 'move'}
       onMouseLeave={(e) => e.target.getStage().container().style.cursor = 'default'}

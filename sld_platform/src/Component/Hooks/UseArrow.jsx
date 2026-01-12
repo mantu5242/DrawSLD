@@ -8,13 +8,12 @@ export const useArrow = (nodes) => {
   const [arrows, setArrows] = useState([]);
 
   /* ---------------- ADD ARROW ---------------- */
+
   const addArrow = () => {
     setArrows(prev => [
       ...prev,
       {
         id: `a${arrowCount++}`,
-        // start: { x: 300, y: 200, attachedTo: null },
-        // end: { x: 450, y: 200, attachedTo: null },
         start: { x: 240, y: 41, attachedTo: null },
         end: { x: 390, y: 41, attachedTo: null },
         stroke: "#000000"
@@ -35,46 +34,164 @@ export const useArrow = (nodes) => {
 
 
 
+  // Helper functions
+  const getNodeCenter = (node) => {
+    if(node.radius){
+      return {x: node.x, y: node.y}
+    }
+
+    return {
+      x: node.x + node.width/2,
+      y: node.y + node.height/2
+    }
+  }
+
+  const getNodeBound = (node) => {
+    if(node.radius){
+      const r = node.radius
+      return {
+        left: node.x - r,
+        right: node.x + r,
+        top: node.y - r,
+        bottom: node.y + r,
+        width: r * 2, 
+        height: r * 2
+      }
+    }
+
+    return {
+      left: node.x,
+      right: node.x + node.width,
+      top: node.y,
+      bottom: node.y + node.height,
+      width: node.width,
+      height: node.height,
+    }
+  }
+
+
 
   // ------------- Snapping Logic ---------------
+
+    // For Rectangles ...
 
   const getSnapPoint = (node, side, index) => {
     const padding = 20;
     const spacing = SIDE_OFFSET;
+    console.log(node)
+    const bounds = getNodeBound(node);
 
     switch (side) {
       case "left":
         return {
-          x: node.x,
-          y: node.y + padding + index * spacing
+          x: bounds.left,
+          y: bounds.top + padding + index * spacing,
         };
+
       case "right":
         return {
-          x: node.x + node.width,
-          y: node.y + padding + index * spacing
+          x: bounds.right,
+          y: bounds.top + padding + index * spacing,
         };
+
       case "top":
         return {
-          x: node.x + padding + index * spacing,
-          y: node.y
+          x: bounds.left + padding + index * spacing,
+          y: bounds.top,
         };
+
       case "bottom":
         return {
-          x: node.x + padding + index * spacing,
-          y: node.y + node.height
+          x: bounds.left + padding + index * spacing,
+          y: bounds.bottom,
         };
+
       default:
-        return { x: node.x, y: node.y };
+        return getNodeCenter(node);
     }
   };
 
+// For Circle..............
+
+//   const getCircleSnapPoint = (node, x, y) => {
+//     const cx = node.x;
+//     const cy = node.y;
+//     const r = node.radius;
+
+//     const dx = x - cx;
+//     const dy = y - cy;
+
+//     // Compute angle from center to pointer in degrees
+//     const angle = Math.atan2(dy, dx) * (180 / Math.PI); // -180 to 180
+
+//     if (angle >= -45 && angle <= 45) {
+//       console.log("right")
+//       return { x: cx + r, y: cy, side: "right" };
+//     } 
+//     else if (angle > 45 && angle < 135) {
+//       console.log('bottom')
+//       return { x: cx, y: cy + r, side: "bottom" };
+//     } 
+//     else if (angle < -45 && angle >= -135) {
+//       console.log("top")
+//       return { x: cx, y: cy - r, side: "top" };
+//     } 
+//     else {
+//       console.log("left")
+//       return { x: cx, y: cy - r, side: "left" };
+//     }
+// };
+
+
+const getCircleSnapPoint = (node, x, y, index = 0, spacing = 14) => {
+  const cx = node.x;
+  const cy = node.y;
+  const r = node.radius;
+
+  const dx = x - cx;
+  const dy = y - cy;
+
+  let side;
+  if (Math.abs(dx) > Math.abs(dy)) {
+    side = dx > 0 ? "right" : "left";
+  } else {
+    side = dy > 0 ? "bottom" : "top";
+  }
+
+  // Base snap coordinates
+  let snapX, snapY;
+
+  switch (side) {
+    case "right":
+      snapX = cx + r;
+      snapY = cy + index * spacing - ((spacing * index) / 2);
+      break;
+    case "left":
+      snapX = cx - r;
+      snapY = cy + index * spacing - ((spacing * index) / 2);
+      break;
+    case "top":
+      snapX = cx + index * spacing - ((spacing * index) / 2);
+      snapY = cy - r;
+      break;
+    case "bottom":
+      snapX = cx + index * spacing - ((spacing * index) / 2);
+      snapY = cy + r;
+      break;
+    default:
+      snapX = cx;
+      snapY = cy;
+  }
+
+  return { x: snapX, y: snapY, side };
+};
+
+
+
+  
   /* ---------------- PORT DRAG ---------------- */
   const updateArrowPort = (arrowId, port, x, y) => {
     const node = hitTestNode(nodes, x, y);
-    console.log("port data",port)
-    console.log("node data",node)
-    console.log("coordinate of ports", x, y);
-
     setArrows(prev =>
       prev.map(a => {
         if (a.id !== arrowId) return a;
@@ -93,34 +210,38 @@ export const useArrow = (nodes) => {
           return a;
         }
 
-        const cx = node.x + node.width / 2;
-        const cy = node.y + node.height / 2;
-
+        
+        const {x : cx, y: cy} = getNodeCenter(node);
         const dx = x - cx;
         const dy = y - cy;
-
+        
         let side;
         if (Math.abs(dx) > Math.abs(dy)) {
-        side = dx > 0 ? "right" : "left";
+          side = dx > 0 ? "right" : "left";
         } else {
-        side = dy > 0 ? "bottom" : "top";
+          side = dy > 0 ? "bottom" : "top";
+        } 
+        
+        
+        const index = prev.filter(ar =>
+          ar[port]?.attachedTo?.nodeId === node.id &&
+          ar[port]?.attachedTo?.side === side &&
+          ar.id !== arrowId
+        ).length;
+        
+        if(node.radius){
+          const snap = getCircleSnapPoint(node,x,y);
+          return{
+            ...a,
+            [port]:{
+              ...snap, attachedTo: {
+              nodeId: node.id,
+            }
+            }
+          }
         }
 
-
-        // Count existing connections on that side
-        // const index = prev.filter(
-        //   ar =>
-        //     ar[port]?.attachedTo?.nodeId === node.id &&
-        //     ar[port]?.attachedTo?.side === side
-        // ).length;
-        const index = prev.filter(ar =>
-            ar[port]?.attachedTo?.nodeId === node.id &&
-            ar[port]?.attachedTo?.side === side &&
-            ar.id !== arrowId
-            ).length;
-
         const snap = getSnapPoint(node, side, index);
-        console.log(index)
 
         return {
           ...a,
@@ -139,27 +260,48 @@ export const useArrow = (nodes) => {
     );
   };
 
-  /* ---------------- UPDATE ON NODE MOVE ---------------- */
-  const syncArrowsWithNode = (node) => {
-    setArrows(prev =>
-      prev.map(a => {
-        const updatePort = (port) => {
-          if (port.attachedTo?.nodeId !== node.id) return port;
 
+  const syncArrowsWithNode = (node) => {
+  setArrows(prev =>
+    prev.map(a => {
+
+      const updatePort = (port) => {
+        if (!port.attachedTo) return port;
+        if (port.attachedTo.nodeId !== node.id) return port;
+
+        const { side, index } = port.attachedTo;
+
+        // Circle node
+        if (node.radius) {
+          const snap = getCircleSnapPoint(
+            node,
+            port.x,
+            port.y
+          );
           return {
-            ...getNearestBoundaryPoint(node, port.x, port.y),
+            ...snap,
             attachedTo: port.attachedTo
           };
-        };
+        }
+
+        // Rectangle / Branch / PRS / etc
+        const snap = getSnapPoint(node, side, index);
 
         return {
-          ...a,
-          start: updatePort(a.start),
-          end: updatePort(a.end)
+          ...snap,
+          attachedTo: port.attachedTo
         };
-      })
-    );
-  };
+      };
+
+      return {
+        ...a,
+        start: updatePort(a.start),
+        end: updatePort(a.end)
+      };
+    })
+  );
+};
+
 
   /* ---------------- DELETE ---------------- */
   const removeArrow = (arrowId) => {

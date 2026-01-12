@@ -460,6 +460,7 @@ const DrawSld = () => {
     updateArrowColor,
     cleanupNodeArrows,
     syncArrowsWithNode
+    // resolvePortPortion
   } = useArrow(nodes);
 
   const handleUpdateNode = (id, x, y) => {

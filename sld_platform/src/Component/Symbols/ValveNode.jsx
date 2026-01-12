@@ -1,72 +1,51 @@
 // // Component/Symbols/PrsNode.jsx
-// import { Group, Rect, Text } from "react-konva";
-// import Port from "../Port/Port";
+// import React from "react";
+// import { Group, Rect, Line, Stage, Layer } from "react-konva";
 
+// const ValveNode = ({ x = 100, y = 100 }) => {
+//   const width = 80;
+//   const height = 40;
 
-
-// const ValveNode = ({ node, onDrag, selected, onSelect }) => { 
-//   const isSelected = selected?.type === 'node' && selected?.id === node.id;
 //   return (
-//     <Group
-//       x={node.x}
-//       y={node.y}
-//       draggable
-//       onDragMove={(e) =>
-//         onDrag(node.id, e.target.x(), e.target.y())
-//       }
-//       onMouseDown={(e) => {
-//         e.cancelBubble = true;
-//         onSelect(node.id);
-//       }}
 
-//       onMouseEnter={(e) => e.target.getStage().container().style.cursor = 'move'}
-//       onMouseLeave={(e) => e.target.getStage().container().style.cursor = 'default'}
-//     >
-//       <Rect
-//         width={100}
-//         height={100}
-//         fill="white"
-//         stroke={isSelected ? 'blue':'black'}
-//         strokeWidth={2}
-//         cornerRadius={8}
-//       />
-
-//       <Text
-//         text="Valve"
-//         width={100}
-//         height={100}
-//         align="center"
-//         verticalAlign="middle"
-//       />
-
-//       {isSelected && (
-//         <>
-//           {/* IN port */}
-//           <Port
-//             x={0} 
-//             y={50}
+//     <Stage width={window.innerWidth} height={window.innerHeight}>
+//       <Layer>
+//         <Group x={x} y={y} draggable>
+//           <Rect
+//             width={width}
+//             height={height}
+//             stroke="black"
+//             strokeWidth={2}
+//             fill="#f5f5f5"
 //           />
 
-//           {/* OUT port */}
-//           <Port
-//             x={100}
-//             y={50}
+//           <Line
+//             points={[
+//               0, height,
+//               width, 0
+//             ]}
+//             stroke="black"
+//             strokeWidth={2}
 //           />
-//         </>
-//       )}
-//     </Group>
+//         </Group>
+//       </Layer>
+//     </Stage>
 //   );
 // };
 
 // export default ValveNode;
+
+
+
+
 import { Text } from "react-konva";
-import BaseNode from "./BaseNode";
+import BaseNode2 from "./BaseNodes/BaseNode2";
 
 const ValveNode = (props) => {
   const { node } = props;
 
   return (
-    <BaseNode {...props}>
+    <BaseNode2 {...props}>
       <Text
         text="Valve"
         width={node.width}
@@ -74,9 +53,8 @@ const ValveNode = (props) => {
         align="center"
         verticalAlign="middle"
       />
-    </BaseNode>
+    </BaseNode2>
   );
 };
 
 export default ValveNode;
-

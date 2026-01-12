@@ -4,12 +4,7 @@ export const NODE_WIDTH = 100;
 export const NODE_HEIGHT = 100;
 
 export function getNearestBoundaryPoint(node, x, y) {
-  // const points = [
-  //   { x: node.x, y: node.y + NODE_HEIGHT / 2 }, // left
-  //   { x: node.x + NODE_WIDTH, y: node.y + NODE_HEIGHT / 2 }, // right
-  //   { x: node.x + NODE_WIDTH / 2, y: node.y }, // top
-  //   { x: node.x + NODE_WIDTH / 2, y: node.y + NODE_HEIGHT } // bottom
-  // ];
+
   const width = node.width || 100;
   const height = node.height || 100;
 

@@ -1,12 +1,12 @@
 // Component/Symbols/BaseNode.jsx
-import { Group, Rect, Text } from "react-konva";
-import Port from "../Port/Port";
-import ResizeHandle from "../Port/ResizeHandle";
+import { Group, Rect, Text, Line } from "react-konva";
+import Port from "../../Port/Port";
+import ResizeHandle from "../../Port/ResizeHandle";
 import { useState } from "react";
 
 const MIN_SIZE = 40;
 
-const BaseNode = ({ node, onDrag, onResize, selected, onSelect, type, children }) => {
+const BaseNode2 = ({ node, onDrag, onResize, selected, onSelect, type, children }) => {
   const [hovered, setHovered] = useState(false);
   const isSelected = selected?.type === "node" && selected?.id === node.id;
   const showPorts = hovered && !isSelected;
@@ -93,15 +93,16 @@ const BaseNode = ({ node, onDrag, onResize, selected, onSelect, type, children }
         fill="white"
         stroke={isSelected ? "blue" : "black"}
         strokeWidth={0.7}
-        cornerRadius={8}
+        // cornerRadius={8}
       />
-      {/* <Text
-        text={type}
-        width={node.width}
-        height={node.height}
-        align="center"
-        verticalAlign="middle"
-      /> */}
+      <Line
+        points={[
+            0, node.height,
+            node.width, 0
+        ]}
+        stroke="black"
+        strokeWidth={0.7}
+      />
 
       {children}
 
@@ -114,7 +115,6 @@ const BaseNode = ({ node, onDrag, onResize, selected, onSelect, type, children }
       <Port y={node.height} x={node.width / 2} visible={hovered} />
       <Port y={0} x={node.width / 2} visible={showPorts} />
       <Port y={node.height} x={node.width / 2} visible={showPorts} />
-
       {/* 8 resize handles when selected */}
       {isSelected &&
         handles.map((h, i) => (
@@ -130,4 +130,4 @@ const BaseNode = ({ node, onDrag, onResize, selected, onSelect, type, children }
   );
 };
 
-export default BaseNode;
+export default BaseNode2;

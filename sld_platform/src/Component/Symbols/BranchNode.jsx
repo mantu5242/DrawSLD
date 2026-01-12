@@ -1,77 +1,40 @@
-// // Component/Symbols/PrsNode.jsx
-// import { Group, Rect, Text } from "react-konva";
-// import Port from "../Port/Port";
+// import React from 'react'
+// import { Group, Layer, Stage,Circle } from 'react-konva'
 
+// const BranchNode = ({ x = 100, y = 100 }) => {
+//   const radius = 20
 
-// const BranchNode = ({ node, onDrag, selected, onSelect }) => { 
-//   const isSelected = selected?.type === 'node' && selected?.id === node.id;
 //   return (
-//     <Group
-//       x={node.x}
-//       y={node.y}
-//       draggable
-//       onDragMove={(e) =>
-//         onDrag(node.id, e.target.x(), e.target.y())
-//       }
-//       onMouseDown={(e) => {
-//         e.cancelBubble = true;
-//         onSelect(node.id);
-//       }}
-//       onMouseEnter={(e) => e.target.getStage().container().style.cursor = 'move'}
-//       onMouseLeave={(e) => e.target.getStage().container().style.cursor = 'default'}
-//     >
-//       <Rect
-//         width={100}
-//         height={100}
-//         fill="white"
-//         stroke={isSelected ? 'blue':'black'}
-//         strokeWidth={2}
-//         cornerRadius={8}
-//       />
+//     <Stage width={window.innerWidth} height={window.innerHeight}>
+//           <Layer>
+//               <Group x={x} y={y} draggable>
+//                 <Circle
+//                   x={0}
+//                   y={0}
+//                   radius={radius}
+//                   stroke="black"
+//                   strokeWidth={0.7}
+//                   fill="#fff394ff"
+//                 />
+//               </Group>
+//           </Layer>
+//         </Stage>
+//   )
+// }
 
-//       <Text
-//         text="Branch"
-//         width={100}
-//         height={100}
-//         align="center"
-//         verticalAlign="middle"
-//       />
-
-//       {isSelected && (
-//         <>
-//           {/* IN port */}
-//           <Port
-//             x={0} 
-//             y={50}
-//             // onMouseDown={() =>
-//             //   onStartConnect?.(node.id)
-//             // }
-//           />
-
-//           {/* OUT port */}
-//           <Port
-//             x={100}
-//             y={50}
-//           />
-//         </>
-//       )}
-//     </Group>
-//   );
-// };
-
-// export default BranchNode;
+// export default BranchNode
 
 
 import { Text } from "react-konva";
-import BaseNode from "./BaseNode";
+import BaseNode from "./BaseNodes/BaseNode3";
 
-const BranchNode = (props) => {
+const BranchNode3 = (props) => {
   const { node } = props;
 
   return (
     <BaseNode {...props}>
       <Text
-        text="Branch"
+        // text="Branch"
         width={node.width}
         height={node.height}
         align="center"
@@ -81,4 +44,4 @@ const BranchNode = (props) => {
   );
 };
 
-export default BranchNode;
+export default BranchNode3;

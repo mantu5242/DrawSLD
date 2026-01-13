@@ -16,7 +16,14 @@ export const useArrow = (nodes) => {
         id: `a${arrowCount++}`,
         start: { x: 240, y: 41, attachedTo: null },
         end: { x: 390, y: 41, attachedTo: null },
-        stroke: "#000000"
+        stroke: "#000000",
+        label: {
+          text: "",
+          t: 0.5,       //Relative mid position on the arrow
+          offset: {x: 0, y: 0},  // relative draggable position from the arrow
+          visible: false,  // text is visible or not
+          editing: false
+        }
       }
     ]);
   };
@@ -222,7 +229,7 @@ const getCircleSnapPoint = (node, x, y, index = 0, spacing = 14) => {
           side = dy > 0 ? "bottom" : "top";
         } 
         
-        
+        // how many port are connected to node
         const index = prev.filter(ar =>
           ar[port]?.attachedTo?.nodeId === node.id &&
           ar[port]?.attachedTo?.side === side &&

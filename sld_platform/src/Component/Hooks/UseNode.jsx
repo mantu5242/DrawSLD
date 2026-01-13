@@ -34,7 +34,7 @@ export const UseNodes = () => {
     setNodes(prev =>
       prev.map(n => n.id === id ? { ...n, x, y } : n)
     );
-    console.log("position of the node",x, y)
+    // console.log("position of the node",x, y)
 
   };
 

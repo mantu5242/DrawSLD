@@ -6,6 +6,8 @@ import GridLayer from "../Utils/GridLayer";
 const SCALE_BY = 1.05;
 
 const SldStage = ({
+  stageRef,
+  setEditingLabel,
   nodes,
   arrows,
   selected,
@@ -68,6 +70,7 @@ const SldStage = ({
   return (
     <div className="canvas">
       <Stage
+        ref={stageRef}
         width={window.innerWidth - 260}
         height={window.innerHeight}
         scaleX={scale}
@@ -97,6 +100,7 @@ const SldStage = ({
             selected={selected}
             setSelected={setSelected}
             onDragPort={updateArrowPort}
+            setEditingLabel = {setEditingLabel}
           />
           <NodesRenderer
             nodes={nodes}

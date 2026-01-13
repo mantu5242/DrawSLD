@@ -1,10 +1,11 @@
 import PipeArrow from "../../Component/Symbols/PipeSymbols/PipeArrow";
-// C:\Users\MantuKumar\Desktop\DrawSLD\sld_platform\src\Component\Symbols\PipeSymbols\PipeArrow.jsx
+
 const ArrowsRenderer = ({
   arrows,
   selected,
   setSelected,
-  onDragPort
+  onDragPort,
+  setEditingLabel
 }) =>
   arrows.map(a => (
     <PipeArrow
@@ -13,6 +14,7 @@ const ArrowsRenderer = ({
       selected={selected}
       onSelect={(id) => setSelected({ type: "edge", id })}
       onDragPort={onDragPort}
+      setEditingLabel={setEditingLabel}
     />
   ));
 

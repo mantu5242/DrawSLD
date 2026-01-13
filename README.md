@@ -12,3 +12,10 @@ There are three Coordinate systems
 
 # Stage Coordinates ----------------
 when you zoom the stage(scale) , the screen position stays the same , but stage(world) coordinates changes
+
+
+
+# Arrow Functionalities
+1. Click on arrow to select
+2. double click on arrow to add label
+3. 

@@ -163,7 +163,6 @@ const PipeArrow = ({ arrow, selected, onSelect, onDragPort, stageRef, setEditing
       y: base.y + (label.offset?.y || 0)
     };
   }
-  // console.log("visibility - ",arrow.label.visible)  
 
 
   /* ---------------- ANIMATION ---------------- */
@@ -185,6 +184,29 @@ const PipeArrow = ({ arrow, selected, onSelect, onDragPort, stageRef, setEditing
     arrow.labelScreenPos = stage.getAbsoluteTransform().point(labelPos)
   }
 
+
+  // for making the text area editable
+  const startLabelEditing = (e) => {
+    e.cancelBubble = true;
+    const stage = e.target.getStage();
+    const base = getPointAtT(points, arrow.label.t);
+    const labelPos = {
+      x: base.x + (arrow.label.offset?.x || 0),
+      y: base.y + (arrow.label.offset?.y || 0)
+    };
+
+    const labelScreenPos =
+      stage.getAbsoluteTransform().point(labelPos);
+
+    arrow.label.visible = true;
+
+    setEditingLabel({
+      arrowId: arrow.id,
+      label: arrow.label,
+      labelScreenPos
+    });
+  };
+
   return (
     <>
       {/* ---------- ARROW ---------- */}
@@ -200,11 +222,7 @@ const PipeArrow = ({ arrow, selected, onSelect, onDragPort, stageRef, setEditing
         onMouseDown={(e) => { e.cancelBubble = true; onSelect(arrow.id); }}
         onMouseEnter={(e) => e.target.getStage().container().style.cursor = 'move'}
         onMouseLeave={(e) => e.target.getStage().container().style.cursor = 'default'}
-        onDblClick={(e) => {
-          e.cancelBubble = true;
-          arrow.label.visible = true;
-          setEditingLabel(arrow)
-        }}
+        onDblClick={startLabelEditing}
       />
       
       {/* ---------- LABEL ---------- */}
@@ -217,10 +235,7 @@ const PipeArrow = ({ arrow, selected, onSelect, onDragPort, stageRef, setEditing
           offsetX={20}
           offsetY={10}
           draggable
-          onDblClick={(e) => {
-            e.cancelBubble = true;
-            setEditingLabel(arrow);
-          }}
+          onDblClick={startLabelEditing}
           onDragEnd={(e) => {
             arrow.label.offset = {
               x: (arrow.label.offset?.x || 0) + e.target.x() - labelPos.x,

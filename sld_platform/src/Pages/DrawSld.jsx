@@ -5,14 +5,13 @@ import { UseNodes } from "../Component/Hooks/UseNode";
 import { useArrow } from "../Component/Hooks/UseArrow";
 import { UseKeyDelete } from "../Component/Hooks/UseKeyDelete";
 import { useStageTransform } from "../Component/Hooks/UseStageTranformer";
-import ArrowTextArea  from "../Component/Symbols/LabelArea/ArrowTextArea"
 
 const DrawSld = () => {
   const [selected, setSelected] = useState({ type: null, id: null });
   const stageRef = useRef(null);
   const [editingLabel, setEditingLabel] = useState(null);
   const { nodes, addNode, updateNode, resizeNode, removeNode } = UseNodes();
-  const {  arrows, addArrow, updateArrowPort, removeArrow, updateArrowColor, cleanupNodeArrows, syncArrowsWithNode } = useArrow(nodes);
+  const {  arrows, addArrow, updateArrowPort, updateArrowLabel, removeArrow, updateArrowColor, cleanupNodeArrows, syncArrowsWithNode } = useArrow(nodes);
 
   const handleUpdateNode = (id, x, y) => {
     updateNode(id, x, y);
@@ -37,8 +36,19 @@ const DrawSld = () => {
     });
   };
 
+
   const stageTransform = useStageTransform();
   UseKeyDelete(selected, removeNode, removeArrow, cleanupNodeArrows, setSelected);
+  console.log("editing label - ",editingLabel);
+
+  // To save the label from the textarea to the arrow
+  const commitLabelChange = () => {
+    if (!editingLabel) return;
+
+    updateArrowLabel(editingLabel.arrowId, editingLabel.label.text);
+    setEditingLabel(null);
+  };
+
 
   return (
     <div className="drawsldmain">
@@ -73,13 +83,20 @@ const DrawSld = () => {
           autoFocus
           value={editingLabel.label.text}
           onChange={(e) => {
-            editingLabel.label.text = e.target.value;
+            const str = e.target.value;
+            setEditingLabel(prev => ({
+              ...prev,
+              label: {...prev, text: str}
+            }))
+            // editingLabel.label.text = e.target.value;
+            console.log(editingLabel.label.text);
           }}
-          onBlur={() => setEditingLabel(null)}
+          onBlur={commitLabelChange}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();
-              setEditingLabel(null);
+              // setEditingLabel(null);
+              commitLabelChange();
             }
           }}
           style={{
@@ -92,7 +109,7 @@ const DrawSld = () => {
               editingLabel.labelScreenPos.y,
             fontSize: "14px",
             padding: "4px",
-            border: "1px solid #1976d2",
+            border: "1px solid #000000",
             outline: "none",
             background: "white",
             zIndex: 10

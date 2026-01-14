@@ -28,6 +28,20 @@ export const useArrow = (nodes) => {
     ]);
   };
 
+
+// update the label of the arrow
+  const updateArrowLabel = (arrowId, text) => {
+    setArrows(prev => prev.map(arrows => arrows.id === arrowId ?
+    {
+      ...arrows, 
+      label: {
+        ...arrows.label, text
+      }
+    }
+    : arrows
+    ))
+  }
+
   /* ---------------- UPDATE ARROW COLOR ----------- */
   const updateArrowColor = (arrowId, color) => {
     setArrows(prev =>
@@ -329,6 +343,7 @@ const getCircleSnapPoint = (node, x, y, index = 0, spacing = 14) => {
     arrows,
     addArrow,
     updateArrowPort,
+    updateArrowLabel,
     syncArrowsWithNode,
     removeArrow,
     updateArrowColor,

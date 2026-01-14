@@ -18,6 +18,8 @@ const ArrowTextarea = ({ arrow, stageRef, onDone }) => {
     ref.current.focus();
   }, [arrow, stageRef]);
 
+  console.log("in textarea component", arrow)
+
   return (
     <textarea
       ref={ref}

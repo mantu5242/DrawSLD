@@ -5,6 +5,7 @@ import { UseNodes } from "../Component/Hooks/UseNode";
 import { useArrow } from "../Component/Hooks/UseArrow";
 import { UseKeyDelete } from "../Component/Hooks/UseKeyDelete";
 import { useStageTransform } from "../Component/Hooks/UseStageTranformer";
+import ArrowTextArea from "../Component/TextArea/ArrowTextArea";
 
 const DrawSld = () => {
   const [selected, setSelected] = useState({ type: null, id: null });
@@ -79,41 +80,11 @@ const DrawSld = () => {
         {...stageTransform}
       />
       {editingLabel && stageRef.current && (
-        <textarea
-          autoFocus
-          value={editingLabel.label.text}
-          onChange={(e) => {
-            const str = e.target.value;
-            setEditingLabel(prev => ({
-              ...prev,
-              label: {...prev, text: str}
-            }))
-            // editingLabel.label.text = e.target.value;
-            console.log(editingLabel.label.text);
-          }}
-          onBlur={commitLabelChange}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              // setEditingLabel(null);
-              commitLabelChange();
-            }
-          }}
-          style={{
-            position: "absolute",
-            left:
-              stageRef.current.container().getBoundingClientRect().left +
-              editingLabel.labelScreenPos.x,
-            top:
-              stageRef.current.container().getBoundingClientRect().top +
-              editingLabel.labelScreenPos.y,
-            fontSize: "14px",
-            padding: "4px",
-            border: "1px solid #000000",
-            outline: "none",
-            background: "white",
-            zIndex: 10
-          }}
+        <ArrowTextArea
+          editingLabel = { editingLabel}
+          setEditingLabel = {setEditingLabel}
+          commitLabelChange = {commitLabelChange}
+          stageRef = { stageRef }
         />
       )}
     </div>

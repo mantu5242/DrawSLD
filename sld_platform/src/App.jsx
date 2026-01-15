@@ -4,7 +4,7 @@ import QpsNode from './Component/Symbols/QpsNode'
 import PrsNode from './Component/Symbols/PrsNode' 
 import BranchNode from './Component/Symbols/BranchNode'
 import DrawSld from './Pages/DrawSld'
-import SimpleConnect from './Pages/SimpleConnect'
+// import SimpleConnect from './Pages/SimpleConnect'
 import ValveNode from './Component/Symbols/ValveNode'
 
 

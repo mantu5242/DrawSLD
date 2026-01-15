@@ -23,8 +23,15 @@ const SldStage = ({
   const shapeRefs = useRef({});
   const [scale, setScale] = useState(1);
   const [stagePos, setStagePos] = useState({ x: 0, y: 0 });
-  const width = window.innerWidth - 260; // sidebar width
+  const width = window.innerWidth; // sidebar width
   const height = window.innerHeight;
+
+  const handleStageDragEnd = (e) => {
+    setStagePos({
+      x: e.target.x(),
+      y: e.target.y(),
+    });
+  };
 
   const handleWheel = (e) => {
     e.evt.preventDefault();
@@ -53,6 +60,8 @@ const SldStage = ({
       y: pointer.y - mousePointTo.y * newScale
     };
 
+  
+
     setScale(newScale);
     setStagePos(newPos);
   };
@@ -70,6 +79,7 @@ const SldStage = ({
   return (
     <div className="canvas">
       <Stage
+        draggable = {true}
         ref={stageRef}
         width={window.innerWidth - 260}
         height={window.innerHeight}
@@ -78,11 +88,13 @@ const SldStage = ({
         x={stagePos.x}
         y={stagePos.y}
         onWheel={handleWheel}
+        onDragEnd={handleStageDragEnd}
         onMouseDown={(e) => {
           if (e.target === e.target.getStage()) {
             setSelected({ type: null, id: null });
           }
         }}
+        
       >
         <Layer listening={false}>
             <GridLayer

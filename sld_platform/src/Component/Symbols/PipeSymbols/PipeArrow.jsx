@@ -230,7 +230,7 @@ const PipeArrow = ({ arrow, selected, onSelect, onDragPort, stageRef, setEditing
         <Text
           x={labelPos.x}
           y={labelPos.y}
-          text={arrow.label.text || "Label"}
+          text={arrow.label.text || ""}
           fontSize={14}
           offsetX={20}
           offsetY={10}

@@ -1,19 +1,37 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { hitTestNode, getNearestBoundaryPoint } from "../../Component/Utils/Geometry";
 
-let arrowCount = 0;
-const SIDE_OFFSET = 14;
+// let arrowCount = 0;
+const SIDE_OFFSET = 0;
 
 export const useArrow = (nodes) => {
-  const [arrows, setArrows] = useState([]);
+  const [arrows, setArrows] = useState(() => {
+    const saved = localStorage.getItem("sld-project");
+    return saved ? JSON.parse(saved).arrows || [] : [];
+  });
+  useEffect (() => {
+    const saved = JSON.parse(localStorage.getItem("sld-project") || "{}");
+    localStorage.setItem(
+      "sld-project",
+      JSON.stringify({ ...saved, arrows })
+    );
+  }, [arrows]);
 
   /* ---------------- ADD ARROW ---------------- */
+
+    const arrowCountRef = useRef(
+    arrows.length > 0
+      ? Math.max(...arrows.map(a => parseInt(a.id.slice(1)))) + 1
+      : 0
+  );
+
+
 
   const addArrow = () => {
     setArrows(prev => [
       ...prev,
       {
-        id: `a${arrowCount++}`,
+        id: `a${arrowCountRef.current++}`,
         start: { x: 240, y: 41, attachedTo: null },
         end: { x: 390, y: 41, attachedTo: null },
         stroke: "#000000",
@@ -96,73 +114,74 @@ export const useArrow = (nodes) => {
 
     // For Rectangles ...
 
+  // const getSnapPoint = (node, side, index) => {
+  //   const padding = 20;
+  //   const spacing = SIDE_OFFSET;
+  //   console.log(node)
+  //   const bounds = getNodeBound(node);
+
+  //   switch (side) {
+  //     case "left":
+  //       return {
+  //         x: bounds.left,
+  //         y: bounds.top + padding + index * spacing,
+  //       };
+
+  //     case "right":
+  //       return {
+  //         x: bounds.right,
+  //         y: bounds.top + padding + index * spacing,
+  //       };
+
+  //     case "top":
+  //       return {
+  //         x: bounds.left + padding + index * spacing,
+  //         y: bounds.top,
+  //       };
+
+  //     case "bottom":
+  //       return {
+  //         x: bounds.left + padding + index * spacing,
+  //         y: bounds.bottom,
+  //       };
+
+  //     default:
+  //       return getNodeCenter(node);
+  //   }
+  // };
   const getSnapPoint = (node, side, index) => {
-    const padding = 20;
-    const spacing = SIDE_OFFSET;
-    console.log(node)
-    const bounds = getNodeBound(node);
+  const bounds = getNodeBound(node);
+  const spacing = SIDE_OFFSET; // distance between multiple ports
 
-    switch (side) {
-      case "left":
-        return {
-          x: bounds.left,
-          y: bounds.top + padding + index * spacing,
-        };
+  switch (side) {
+    case "left":
+      return {
+        x: bounds.left,
+        y: bounds.top + bounds.height / 2 + (index * spacing) - ((spacing * (index)) / 2),
+      };
 
-      case "right":
-        return {
-          x: bounds.right,
-          y: bounds.top + padding + index * spacing,
-        };
+    case "right":
+      return {
+        x: bounds.right,
+        y: bounds.top + bounds.height / 2 + (index * spacing) - ((spacing * (index)) / 2),
+      };
 
-      case "top":
-        return {
-          x: bounds.left + padding + index * spacing,
-          y: bounds.top,
-        };
+    case "top":
+      return {
+        x: bounds.left + bounds.width / 2 + (index * spacing) - ((spacing * (index)) / 2),
+        y: bounds.top,
+      };
 
-      case "bottom":
-        return {
-          x: bounds.left + padding + index * spacing,
-          y: bounds.bottom,
-        };
+    case "bottom":
+      return {
+        x: bounds.left + bounds.width / 2 + (index * spacing) - ((spacing * (index)) / 2),
+        y: bounds.bottom,
+      };
 
-      default:
-        return getNodeCenter(node);
-    }
-  };
-
-// For Circle..............
-
-//   const getCircleSnapPoint = (node, x, y) => {
-//     const cx = node.x;
-//     const cy = node.y;
-//     const r = node.radius;
-
-//     const dx = x - cx;
-//     const dy = y - cy;
-
-//     // Compute angle from center to pointer in degrees
-//     const angle = Math.atan2(dy, dx) * (180 / Math.PI); // -180 to 180
-
-//     if (angle >= -45 && angle <= 45) {
-//       console.log("right")
-//       return { x: cx + r, y: cy, side: "right" };
-//     } 
-//     else if (angle > 45 && angle < 135) {
-//       console.log('bottom')
-//       return { x: cx, y: cy + r, side: "bottom" };
-//     } 
-//     else if (angle < -45 && angle >= -135) {
-//       console.log("top")
-//       return { x: cx, y: cy - r, side: "top" };
-//     } 
-//     else {
-//       console.log("left")
-//       return { x: cx, y: cy - r, side: "left" };
-//     }
-// };
-
+    default:
+      return getNodeCenter(node);
+  }
+};
 
 const getCircleSnapPoint = (node, x, y, index = 0, spacing = 14) => {
   const cx = node.x;

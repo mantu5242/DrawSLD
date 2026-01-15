@@ -26,3 +26,20 @@ So the approach was to has textarea over the "text" of Conva.
 And the HTML is written outside the Conva and positioned over the Konva Text (using Z- indexing);
 Working -----------
 1. on double click arrow, textarea will be visible and user give the label and Konva "text" will be updated with the written label.
+json of - 
+{
+    id: `a${arrowCount++}`,
+    start: { x: 240, y: 41, attachedTo: null },
+    end: { x: 390, y: 41, attachedTo: null },
+    stroke: "#000000",
+    label: {
+        text: "",
+        t: 0.5, 
+        offset: {x: 0, y: 0},  
+        visible: false, 
+        editing: false
+    }
+}
+
+
+

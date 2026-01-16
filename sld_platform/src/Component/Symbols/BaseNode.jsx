@@ -6,10 +6,11 @@ import { useState } from "react";
 
 const MIN_SIZE = 40;
 
-const BaseNode = ({ node, onDrag, onResize, selected, onSelect, type, children }) => {
+const BaseNode = ({ node, onDrag, onResize, selected, onSelect, type, children, setIsDraggingNode }) => {
   const [hovered, setHovered] = useState(false);
   const isSelected = selected?.type === "node" && selected?.id === node.id;
   const showPorts = hovered && !isSelected;
+ 
 
   // 8 handles relative positions
   const handles = [
@@ -81,7 +82,9 @@ const BaseNode = ({ node, onDrag, onResize, selected, onSelect, type, children }
     <Group
       x={node.x}
       y={node.y}
-      draggable
+      draggable 
+      onDragStart={(e) => { e.cancelBubble = true; setIsDraggingNode(true)}}
+      onDragEnd={ (e) => { e.cancelBubble = true; setIsDraggingNode(false);}}
       onDragMove={(e) => onDrag(node.id, e.target.x(), e.target.y())}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -95,14 +98,6 @@ const BaseNode = ({ node, onDrag, onResize, selected, onSelect, type, children }
         strokeWidth={0.7}
         cornerRadius={8}
       />
-      {/* <Text
-        text={type}
-        width={node.width}
-        height={node.height}
-        align="center"
-        verticalAlign="middle"
-      /> */}
-
       {children}
 
       {/* Hover-only connection ports */}

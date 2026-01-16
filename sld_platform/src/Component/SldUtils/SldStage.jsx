@@ -23,6 +23,7 @@ const SldStage = ({
   const shapeRefs = useRef({});
   const [scale, setScale] = useState(1);
   const [stagePos, setStagePos] = useState({ x: 0, y: 0 });
+  const [isDraggingNode, setIsDraggingNode] = useState(false);
   const width = window.innerWidth; // sidebar width
   const height = window.innerHeight;
 
@@ -32,7 +33,7 @@ const SldStage = ({
       y: e.target.y(),
     });
   };
-
+  console.log("node is dragging . ",isDraggingNode)
   const handleWheel = (e) => {
     e.evt.preventDefault();
 
@@ -79,7 +80,8 @@ const SldStage = ({
   return (
     <div className="canvas">
       <Stage
-        draggable = {true}
+        draggable = {!isDraggingNode}
+        // draggable
         ref={stageRef}
         width={window.innerWidth - 260}
         height={window.innerHeight}
@@ -121,6 +123,7 @@ const SldStage = ({
             updateNode={updateNode}
             resizeNode={resizeNode}
             shapeRefs={shapeRefs}
+            setIsDraggingNode = {setIsDraggingNode}
           />
           {selected?.type === "node" && (
             <Transformer

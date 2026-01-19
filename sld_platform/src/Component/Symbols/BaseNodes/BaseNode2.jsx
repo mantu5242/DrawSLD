@@ -6,7 +6,7 @@ import { useState } from "react";
 
 const MIN_SIZE = 40;
 
-const BaseNode2 = ({ node, onDrag, onResize, selected, onSelect, type, children }) => {
+const BaseNode2 = ({ node, onDrag, onResize, selected, onSelect, type, children, setIsDraggingNode, onStartConnect, onFinishConnect }) => {
   const [hovered, setHovered] = useState(false);
   const isSelected = selected?.type === "node" && selected?.id === node.id;
   const showPorts = hovered && !isSelected;
@@ -82,6 +82,8 @@ const BaseNode2 = ({ node, onDrag, onResize, selected, onSelect, type, children 
       x={node.x}
       y={node.y}
       draggable
+      onDragStart={(e) => { e.cancelBubble = true; setIsDraggingNode(true)}}
+      onDragEnd={ (e) => { e.cancelBubble = true; setIsDraggingNode(false);}}
       onDragMove={(e) => onDrag(node.id, e.target.x(), e.target.y())}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -109,12 +111,13 @@ const BaseNode2 = ({ node, onDrag, onResize, selected, onSelect, type, children 
       {/* Hover-only connection ports */}
       <Port x={0} y={node.height / 2} visible={hovered} />
       <Port x={node.width} y={node.height / 2} visible={hovered} />
-      <Port x={0} y={node.height / 2} visible={showPorts} />
-      <Port x={node.width} y={node.height / 2} visible={showPorts} />
+      <Port x={0} y={node.height / 2} nodeId side={"left"} visible={showPorts} onStartConnect={onStartConnect} onFinishConnect={onFinishConnect} />
+      <Port x={node.width} y={node.height / 2} nodeId side={"right"} visible={showPorts} onStartConnect={onStartConnect} onFinishConnect={onFinishConnect}/>
       <Port y={0} x={node.width / 2} visible={hovered} />
-      <Port y={node.height} x={node.width / 2} visible={hovered} />
-      <Port y={0} x={node.width / 2} visible={showPorts} />
-      <Port y={node.height} x={node.width / 2} visible={showPorts} />
+      <Port y={node.height} x={node.width / 2}  visible={hovered} />
+      <Port y={0} x={node.width / 2} nodeId side={"top"} visible={showPorts} onStartConnect={onStartConnect} onFinishConnect={onFinishConnect} />
+      <Port y={node.height} x={node.width / 2} nodeId side={"bottom"} visible={showPorts} onStartConnect={onStartConnect} onFinishConnect={onFinishConnect}/>
+
       {/* 8 resize handles when selected */}
       {isSelected &&
         handles.map((h, i) => (

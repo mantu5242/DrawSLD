@@ -1,13 +1,17 @@
-import { Stage, Layer, Transformer } from "react-konva";
+import { Stage, Layer, Transformer, Arrow } from "react-konva";
 import ArrowsRenderer from "./ArrowRenderer";
 import NodesRenderer from "./NodesRenderer";
 import { useRef, useEffect, useState } from "react";
 import GridLayer from "../Utils/GridLayer";
+import { getWorldPointer } from "../Utils/World";
+import { getNearestBoundaryPoint } from "../Utils/Geometry";
 const SCALE_BY = 1.05;
 
 const SldStage = ({
   stageRef,
   setEditingLabel,
+  connecting,
+  setConnecting,
   nodes,
   arrows,
   selected,
@@ -15,6 +19,7 @@ const SldStage = ({
   updateNode,
   resizeNode,
   updateArrowPort,
+  addArrowFromPorts
   // scale = 1,
   // stagePos = {x : 0,y : 0},
   // handleWheel
@@ -33,7 +38,7 @@ const SldStage = ({
       y: e.target.y(),
     });
   };
-  console.log("node is dragging . ",isDraggingNode)
+  
   const handleWheel = (e) => {
     e.evt.preventDefault();
 
@@ -43,8 +48,6 @@ const SldStage = ({
     if (!pointer) return;
 
     const oldScale = scale;
-    //  const direction = e.evt.deltaY < 0 ? 1 : -1;
-    // 👉 position in world coordinates
     const mousePointTo = {
       x: (pointer.x - stagePos.x) / oldScale,
       y: (pointer.y - stagePos.y) / oldScale
@@ -55,7 +58,7 @@ const SldStage = ({
     const newScale =
       direction > 0 ? oldScale * SCALE_BY : oldScale / SCALE_BY;
 
-    // 👉 calculate new position so cursor stays fixed
+    // calculate new position so cursor stays fixed
     const newPos = {
       x: pointer.x - mousePointTo.x * newScale,
       y: pointer.y - mousePointTo.y * newScale
@@ -66,6 +69,32 @@ const SldStage = ({
     setScale(newScale);
     setStagePos(newPos);
   };
+
+  // Connection logic dragConnection
+  // const startConnect= (nodeId, side, pos) => {
+  //   setConnecting({
+  //     from: {nodeId, side, x: pos.x, y: pos.y},
+  //     to: pos
+  //   })
+  // }
+  const startConnect = (nodeId, side) => {
+    setConnecting({
+      from: { nodeId, side },
+      to: null
+    });
+  };
+
+  const finishConnect = (toNodeId, toSide) => {
+    if(!connecting) return ;
+    if(connecting.from.nodeId === toNodeId){
+      setConnecting(null);
+      return;
+    }
+
+    addArrowFromPorts(connecting.from, {nodeId: toNodeId, side: toSide});
+    setConnecting(null);
+
+  }
 
   useEffect(() => {
     if (selected?.type === "node" && trRef.current) {
@@ -81,7 +110,6 @@ const SldStage = ({
     <div className="canvas">
       <Stage
         draggable = {!isDraggingNode}
-        // draggable
         ref={stageRef}
         width={window.innerWidth - 260}
         height={window.innerHeight}
@@ -96,6 +124,13 @@ const SldStage = ({
             setSelected({ type: null, id: null });
           }
         }}
+        onMouseMove={(e) => {
+          if(!connecting) return;
+          const stage = e.target.getStage();
+          const pos = getWorldPointer(stage);
+          setConnecting(prev => ({...prev, to: pos}))
+        }}
+        onMouseUp={(e) => {if(connecting) setConnecting(null)}}
         
       >
         <Layer listening={false}>
@@ -116,6 +151,51 @@ const SldStage = ({
             onDragPort={updateArrowPort}
             setEditingLabel = {setEditingLabel}
           />
+          {/* {connecting && (
+            <Arrow
+              points={[
+                connecting.from.x,
+                connecting.from.y,
+                connecting.to.x,
+                connecting.to.y
+              ]}
+              stroke="black"
+              pointerLength={10}
+              pointerWidth={10}
+              dash={[6, 4]}
+              listening={false}   // IMPORTANT
+            />
+          )} */}
+
+            {connecting && (() => {
+              console.log(connecting)
+              const fromNode = nodes.find(n => n.id === connecting.from.nodeId);
+              // console.log("from Node - ",fromNode)
+              if (!fromNode || !connecting.to) return null;
+
+              const start = getNearestBoundaryPoint(
+                fromNode,
+                connecting.to.x,
+                connecting.to.y
+              );
+
+              return (
+                <Arrow
+                  points={[
+                    start.x,
+                    start.y,
+                    connecting.to.x,
+                    connecting.to.y
+                  ]}
+                  stroke="black"
+                  dash={[6, 4]}
+                  pointerLength={10}
+                  pointerWidth={10}
+                  listening={false}
+                />
+              );
+            })()}
+
           <NodesRenderer
             nodes={nodes}
             selected={selected}
@@ -124,6 +204,9 @@ const SldStage = ({
             resizeNode={resizeNode}
             shapeRefs={shapeRefs}
             setIsDraggingNode = {setIsDraggingNode}
+            onStartConnect = {startConnect}
+            onFinishConnect = {finishConnect}
+            
           />
           {selected?.type === "node" && (
             <Transformer

@@ -11,8 +11,9 @@ const DrawSld = () => {
   const [selected, setSelected] = useState({ type: null, id: null });
   const stageRef = useRef(null);
   const [editingLabel, setEditingLabel] = useState(null);
+  const [connecting, setConnecting] = useState(null);
   const { nodes, addNode, updateNode, resizeNode, removeNode } = UseNodes();
-  const {  arrows, addArrow, updateArrowPort, updateArrowLabel, removeArrow, updateArrowColor, cleanupNodeArrows, syncArrowsWithNode } = useArrow(nodes);
+  const {  arrows, addArrow,addArrowFromPorts, updateArrowPort, updateArrowLabel, removeArrow, updateArrowColor, cleanupNodeArrows, syncArrowsWithNode } = useArrow(nodes);
 
   const handleUpdateNode = (id, x, y) => {
     updateNode(id, x, y);
@@ -40,7 +41,6 @@ const DrawSld = () => {
 
   const stageTransform = useStageTransform();
   UseKeyDelete(selected, removeNode, removeArrow, cleanupNodeArrows, setSelected);
-  console.log("editing label - ",editingLabel);
 
   // To save the label from the textarea to the arrow
   const commitLabelChange = () => {
@@ -67,6 +67,8 @@ const DrawSld = () => {
       <SldStage
         stageRef = {stageRef}
         setEditingLabel = {setEditingLabel}
+        connecting = {connecting}
+        setConnecting = {setConnecting}
         nodes={nodes}
         arrows={arrows}
         selected={selected}
@@ -77,6 +79,7 @@ const DrawSld = () => {
         updateNode={handleUpdateNode}
         resizeNode={handleResizeNode}
         updateArrowPort={updateArrowPort}
+        addArrowFromPorts = {addArrowFromPorts}
         {...stageTransform}
       />
       {editingLabel && stageRef.current && (

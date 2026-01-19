@@ -43,3 +43,13 @@ json of -
 
 
 
+# Implementing a Feature of connecting two nodes via dragging a port of one node to another node port
+1. first define the state and components
+    eg - list  of nodes, connection(state), drawingLine(state), etc
+2. Handle the Connection drag start
+    -> initiate the line from the starting point
+     get the absolute staring point
+     start tracking the mouse movement and set the temporary line point
+3. Draw the temporary line
+4. Finalize or Cancel the connection
+

@@ -12,7 +12,10 @@ const BaseNode3 = ({
   onResize,
   selected,
   onSelect,
-  children,
+  children, 
+  setIsDraggingNode,
+  onStartConnect,
+  onFinishConnect
 }) => {
   const [hovered, setHovered] = useState(false);
 
@@ -53,6 +56,8 @@ const BaseNode3 = ({
       x={node.x}
       y={node.y}
       draggable
+       onDragStart={(e) => { e.cancelBubble = true; setIsDraggingNode(true)}}
+      onDragEnd={ (e) => { e.cancelBubble = true; setIsDraggingNode(false);}}
       onDragMove={(e) => onDrag(node.id, e.target.x(), e.target.y())}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -71,11 +76,11 @@ const BaseNode3 = ({
 
       {children}
 
-      {/* Ports (left & right) */}
-      <Port x={-r} y={0} visible={showPorts} />
-      <Port x={r} y={0} visible={showPorts} />
-      <Port y = {-r} x = {0} visible = {showPorts}/>
-      <Port y = {r} x = {0} visible = {showPorts} />
+      
+      <Port x={-r} y={0} visible={showPorts} onStartConnect={onStartConnect} onFinishConnect={onFinishConnect}  />
+      <Port x={r} y={0} visible={showPorts} onStartConnect={onStartConnect} onFinishConnect={onFinishConnect}  />
+      <Port y = {-r} x = {0} visible = {showPorts} onStartConnect={onStartConnect} onFinishConnect={onFinishConnect}  />
+      <Port y = {r} x = {0} visible = {showPorts} onStartConnect={onStartConnect} onFinishConnect={onFinishConnect} />
 
       {/* Resize handles */}
       {isSelected &&

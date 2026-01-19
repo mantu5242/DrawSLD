@@ -25,8 +25,10 @@ const NodesRenderer = ({
   updateNode,
   resizeNode,
   shapeRefs,
-  isDraggingNode,
-  setIsDraggingNode
+  // isDraggingNode,
+  setIsDraggingNode,
+  onStartConnect,
+  onFinishConnect
 }) =>
   nodes.map(node => {
     const Component = NODE_MAP[node.type];
@@ -38,6 +40,8 @@ const NodesRenderer = ({
         key={node.id}  
       
         setIsDraggingNode = {setIsDraggingNode}
+        onStartConnect = {onStartConnect}
+        onFinishConnect = {onFinishConnect}
         node={node}
         selected={selected}
         onDrag={updateNode}

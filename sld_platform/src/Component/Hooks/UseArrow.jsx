@@ -18,7 +18,6 @@ export const useArrow = (nodes) => {
   }, [arrows]);
 
   /* ---------------- ADD ARROW ---------------- */
-
     const arrowCountRef = useRef(
     arrows.length > 0
       ? Math.max(...arrows.map(a => parseInt(a.id.slice(1)))) + 1
@@ -46,6 +45,72 @@ export const useArrow = (nodes) => {
     ]);
   };
 
+
+// to create arrow from port
+  const addArrowFromPorts = (from, to) => {
+    console.log("from", from);
+    console.log("to ", to);
+    const fromNode = nodes.find(n => n.id === from.nodeId);
+    const toNode = nodes.find(n => n.id === to.nodeId);
+    console.log("from Node - ", fromNode);
+    console.log("to Node - ", toNode);
+
+    if(!fromNode || ! toNode) return ;
+    const fromIndex = from.index ?? 0;
+    const toIndex = to.index ?? 0;
+
+    let startSnap;
+    if(fromNode.radius){
+      startSnap = getCircleSnapPoint(fromNode, fromNode.x, fromNode.y);
+    }
+    else{
+      startSnap = getSnapPoint(fromNode, from.side, fromIndex);
+      console.log('start snap', startSnap);
+    }
+
+    let endSnap;
+    if(toNode.radius){
+      endSnap = getCircleSnapPoint(toNode, toNode.x, toNode.y);
+    }
+    else{
+      endSnap = getSnapPoint(toNode, to.side, toIndex);
+      console.log('end snap', endSnap);
+    }
+
+
+
+
+    setArrows(prev => [
+      ...prev, {
+        id: `a${arrowCountRef.current++}`,
+        start:{
+          ...startSnap,
+          attachedTo:{
+            nodeId: from.nodeId,
+            side: from.side,
+            index: from.index
+          }
+        },
+        end:{
+          ...endSnap,
+          attachedTo:{
+            nodeId: to.nodeId,
+            side: to.side,
+            index: to.index
+          }
+        },
+        stroke: "#000",
+        label: {
+          text: "",
+          t: 0.5,
+          offset: { x: 0, y: 0 },
+          visible: false,
+          editing: false
+        }
+      }
+    ])
+    
+  }
 
 // update the label of the arrow
   const updateArrowLabel = (arrowId, text) => {
@@ -109,46 +174,6 @@ export const useArrow = (nodes) => {
   }
 
 
-
-  // ------------- Snapping Logic ---------------
-
-    // For Rectangles ...
-
-  // const getSnapPoint = (node, side, index) => {
-  //   const padding = 20;
-  //   const spacing = SIDE_OFFSET;
-  //   console.log(node)
-  //   const bounds = getNodeBound(node);
-
-  //   switch (side) {
-  //     case "left":
-  //       return {
-  //         x: bounds.left,
-  //         y: bounds.top + padding + index * spacing,
-  //       };
-
-  //     case "right":
-  //       return {
-  //         x: bounds.right,
-  //         y: bounds.top + padding + index * spacing,
-  //       };
-
-  //     case "top":
-  //       return {
-  //         x: bounds.left + padding + index * spacing,
-  //         y: bounds.top,
-  //       };
-
-  //     case "bottom":
-  //       return {
-  //         x: bounds.left + padding + index * spacing,
-  //         y: bounds.bottom,
-  //       };
-
-  //     default:
-  //       return getNodeCenter(node);
-  //   }
-  // };
   const getSnapPoint = (node, side, index) => {
   const bounds = getNodeBound(node);
   const spacing = SIDE_OFFSET; // distance between multiple ports
@@ -163,8 +188,9 @@ export const useArrow = (nodes) => {
     case "right":
       return {
         x: bounds.right,
-        y: bounds.top + bounds.height / 2 + (index * spacing) - ((spacing * (index)) / 2),
+        y: bounds.top + bounds.height / 2 + (index * spacing) - ((spacing * (index)) / 2)
       };
+      
 
     case "top":
       return {
@@ -361,6 +387,7 @@ const getCircleSnapPoint = (node, x, y, index = 0, spacing = 14) => {
   return {
     arrows,
     addArrow,
+    addArrowFromPorts,
     updateArrowPort,
     updateArrowLabel,
     syncArrowsWithNode,

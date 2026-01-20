@@ -24,6 +24,7 @@ const BaseNode3 = ({
 
   const r = node.radius;
   const d = r * 2;
+  const nodeId = node.id;
 
   // Handles based on bounding box of the circle
   const handles = [
@@ -77,10 +78,10 @@ const BaseNode3 = ({
       {children}
 
       
-      <Port x={-r} y={0} visible={showPorts} onStartConnect={onStartConnect} onFinishConnect={onFinishConnect}  />
-      <Port x={r} y={0} visible={showPorts} onStartConnect={onStartConnect} onFinishConnect={onFinishConnect}  />
-      <Port y = {-r} x = {0} visible = {showPorts} onStartConnect={onStartConnect} onFinishConnect={onFinishConnect}  />
-      <Port y = {r} x = {0} visible = {showPorts} onStartConnect={onStartConnect} onFinishConnect={onFinishConnect} />
+      <Port x={-r} y={0} visible={showPorts} nodeId = {nodeId} side = {"left"} onStartConnect={onStartConnect} onFinishConnect={onFinishConnect}  />
+      <Port x={r} y={0} visible={showPorts} nodeId = {nodeId} side = {"right"} onStartConnect={onStartConnect} onFinishConnect={onFinishConnect}  />
+      <Port y = {-r} x = {0} visible = {showPorts} nodeId = {nodeId} side = {"top"} onStartConnect={onStartConnect} onFinishConnect={onFinishConnect}  />
+      <Port y = {r} x = {0} visible = {showPorts} nodeId = {nodeId} side = {"bottom"} onStartConnect={onStartConnect} onFinishConnect={onFinishConnect} />
 
       {/* Resize handles */}
       {isSelected &&

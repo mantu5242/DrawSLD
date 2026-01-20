@@ -94,8 +94,12 @@ const PipeArrow = ({ arrow, selected, onSelect, onDragPort, stageRef, setEditing
           offsetX={20}
           offsetY={10}
           draggable
+          onDragStart={(e) => {
+            e.cancelBubble = true;
+          }}
           onDblClick={startLabelEditing}
           onDragEnd={(e) => {
+            e.cancelBubble = true;
             arrow.label.offset = {
               x: (arrow.label.offset?.x || 0) + e.target.x() - labelPos.x,
               y: (arrow.label.offset?.y || 0) + e.target.y() - labelPos.y
@@ -112,6 +116,8 @@ const PipeArrow = ({ arrow, selected, onSelect, onDragPort, stageRef, setEditing
             radius={6}
             fill="#1951d2"
             draggable
+            onDragStart={(e) => {e.cancelBubble = true}}
+            onDragEnd={(e) => {e.cancelBubble = true}}
             onDragMove={(e) => {
               e.cancelBubble = true;
               const stage = e.target.getStage();
@@ -128,6 +134,10 @@ const PipeArrow = ({ arrow, selected, onSelect, onDragPort, stageRef, setEditing
             radius={6}
             fill="#1976d2"
             draggable
+            onDragStart={(e) => {
+              e.cancelBubble = true;
+            }}
+            onDragEnd={(e) => {e.cancelBubble = true}}
             onDragMove={(e) => {
               e.cancelBubble = true;
               const stage = e.target.getStage();

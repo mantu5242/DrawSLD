@@ -76,10 +76,6 @@ export const useArrow = (nodes) => {
       endSnap = getSnapPoint(toNode, to.side, toIndex);
       console.log('end snap', endSnap);
     }
-
-
-
-
     setArrows(prev => [
       ...prev, {
         id: `a${arrowCountRef.current++}`,
@@ -88,7 +84,7 @@ export const useArrow = (nodes) => {
           attachedTo:{
             nodeId: from.nodeId,
             side: from.side,
-            index: from.index
+            index: fromIndex
           }
         },
         end:{
@@ -96,7 +92,7 @@ export const useArrow = (nodes) => {
           attachedTo:{
             nodeId: to.nodeId,
             side: to.side,
-            index: to.index
+            index: toIndex
           }
         },
         stroke: "#000",
@@ -162,7 +158,6 @@ export const useArrow = (nodes) => {
         height: r * 2
       }
     }
-
     return {
       left: node.x,
       right: node.x + node.width,
@@ -174,7 +169,7 @@ export const useArrow = (nodes) => {
   }
 
 
-  const getSnapPoint = (node, side, index) => {
+  const getSnapPoint = (node, side, index = 0) => {
   const bounds = getNodeBound(node);
   const spacing = SIDE_OFFSET; // distance between multiple ports
 
@@ -252,6 +247,40 @@ const getCircleSnapPoint = (node, x, y, index = 0, spacing = 14) => {
   return { x: snapX, y: snapY, side };
 };
 
+// const getCircleSnapPoint = (node, x, y, index = 0) => {
+//   const portsPerSide = 2;
+//   const cx = node.x;
+//   const cy = node.y;
+//   const r = node.radius;
+
+//   const dx = x - cx;
+//   const dy = y - cy;
+
+//   let side;
+//   if (Math.abs(dx) > Math.abs(dy)) {
+//     side = dx > 0 ? "right" : "left";
+//   } else {
+//     side = dy > 0 ? "bottom" : "top";
+//   }
+
+//   // angle ranges for each side
+//   const ranges = {
+//     right: { start: -Math.PI / 4, end: Math.PI / 4 },
+//     bottom: { start: Math.PI / 4, end: (3 * Math.PI) / 4 },
+//     left: { start: (3 * Math.PI) / 4, end: (5 * Math.PI) / 4 },
+//     top: { start: (5 * Math.PI) / 4, end: (7 * Math.PI) / 4 }
+//   };
+
+//   const { start, end } = ranges[side];
+//   const t = portsPerSide === 1 ? 0.5 : (index + 1) / (portsPerSide + 1);
+//   const angle = start + (end - start) * t;
+
+//   return {
+//     x: cx + Math.cos(angle) * r,
+//     y: cy + Math.sin(angle) * r,
+//     side
+//   };
+// };
 
 
   
@@ -328,45 +357,45 @@ const getCircleSnapPoint = (node, x, y, index = 0, spacing = 14) => {
 
 
   const syncArrowsWithNode = (node) => {
-  setArrows(prev =>
-    prev.map(a => {
+    setArrows(prev =>
+      prev.map(a => {
 
-      const updatePort = (port) => {
-        if (!port.attachedTo) return port;
-        if (port.attachedTo.nodeId !== node.id) return port;
+        const updatePort = (port) => {
+          if (!port.attachedTo) return port;
+          if (port.attachedTo.nodeId !== node.id) return port;
 
-        const { side, index } = port.attachedTo;
+          const { side, index } = port.attachedTo;
 
-        // Circle node
-        if (node.radius) {
-          const snap = getCircleSnapPoint(
-            node,
-            port.x,
-            port.y
-          );
+          // Circle node
+          if (node.radius) {
+            const snap = getCircleSnapPoint(
+              node,
+              port.x,
+              port.y
+            );
+            return {
+              ...snap,
+              attachedTo: port.attachedTo
+            };
+          }
+
+          // Rectangle / Branch / PRS / etc
+          const snap = getSnapPoint(node, side, index);
+
           return {
             ...snap,
             attachedTo: port.attachedTo
           };
-        }
-
-        // Rectangle / Branch / PRS / etc
-        const snap = getSnapPoint(node, side, index);
+        };
 
         return {
-          ...snap,
-          attachedTo: port.attachedTo
+          ...a,
+          start: updatePort(a.start),
+          end: updatePort(a.end)
         };
-      };
-
-      return {
-        ...a,
-        start: updatePort(a.start),
-        end: updatePort(a.end)
-      };
-    })
-  );
-};
+      })
+    );
+  };
 
 
   /* ---------------- DELETE ---------------- */

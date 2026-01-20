@@ -3,7 +3,7 @@ import { Group, Arrow, Circle, Text } from "react-konva";
 import { getOrthogonalPath } from "../../Utils/OrthogonalPath";
 import { getWorldPointer } from "../../Utils/World";
 import { getPointAtT } from "../../Utils/Geometry";
-import { Html } from "react-konva-utils";
+
 
 const PipeArrow = ({ arrow, selected, onSelect, onDragPort, stageRef, setEditingLabel }) => {
   if (!arrow?.start || !arrow?.end) return null;
@@ -113,6 +113,7 @@ const PipeArrow = ({ arrow, selected, onSelect, onDragPort, stageRef, setEditing
             fill="#1951d2"
             draggable
             onDragMove={(e) => {
+              e.cancelBubble = true;
               const stage = e.target.getStage();
               const pos = getWorldPointer(stage);
               e.target.position({ x: arrow.start.x, y: arrow.start.y });
@@ -128,6 +129,7 @@ const PipeArrow = ({ arrow, selected, onSelect, onDragPort, stageRef, setEditing
             fill="#1976d2"
             draggable
             onDragMove={(e) => {
+              e.cancelBubble = true;
               const stage = e.target.getStage();
               const pos = getWorldPointer(stage);
               e.target.position({ x: arrow.end.x, y: arrow.end.y });

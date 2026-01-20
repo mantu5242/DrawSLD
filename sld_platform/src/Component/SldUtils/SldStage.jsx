@@ -20,9 +20,6 @@ const SldStage = ({
   resizeNode,
   updateArrowPort,
   addArrowFromPorts
-  // scale = 1,
-  // stagePos = {x : 0,y : 0},
-  // handleWheel
 }) => {
   const trRef = useRef();
   const shapeRefs = useRef({});
@@ -69,14 +66,6 @@ const SldStage = ({
     setScale(newScale);
     setStagePos(newPos);
   };
-
-  // Connection logic dragConnection
-  // const startConnect= (nodeId, side, pos) => {
-  //   setConnecting({
-  //     from: {nodeId, side, x: pos.x, y: pos.y},
-  //     to: pos
-  //   })
-  // }
   const startConnect = (nodeId, side) => {
     setConnecting({
       from: { nodeId, side },
@@ -151,22 +140,6 @@ const SldStage = ({
             onDragPort={updateArrowPort}
             setEditingLabel = {setEditingLabel}
           />
-          {/* {connecting && (
-            <Arrow
-              points={[
-                connecting.from.x,
-                connecting.from.y,
-                connecting.to.x,
-                connecting.to.y
-              ]}
-              stroke="black"
-              pointerLength={10}
-              pointerWidth={10}
-              dash={[6, 4]}
-              listening={false}   // IMPORTANT
-            />
-          )} */}
-
             {connecting && (() => {
               console.log(connecting)
               const fromNode = nodes.find(n => n.id === connecting.from.nodeId);

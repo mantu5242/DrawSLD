@@ -38,6 +38,8 @@ const BaseNode3 = ({
     { x: -r, y: 0, cursor: "w-resize" }, // left
   ];
 
+
+  // resizing node
   const handleDrag = (index, e) => {
     const dx = e.target.x() - handles[index].x;
     const dy = e.target.y() - handles[index].y;
@@ -57,15 +59,12 @@ const BaseNode3 = ({
       x={node.x}
       y={node.y}
       draggable
-       onDragStart={(e) => { e.cancelBubble = true; setIsDraggingNode(true)}}
+      onDragStart={(e) => { e.cancelBubble = true; setIsDraggingNode(true)}}
       onDragEnd={ (e) => { e.cancelBubble = true; setIsDraggingNode(false);}}
       onDragMove={(e) => onDrag(node.id, e.target.x(), e.target.y())}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onMouseDown={(e) => {
-        e.cancelBubble = true;
-        onSelect(node.id);
-      }}
+      onMouseDown={(e) => {e.cancelBubble = true; onSelect(node.id); }}
     >
       {/* Circle */}
       <Circle

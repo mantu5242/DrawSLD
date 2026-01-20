@@ -66,9 +66,9 @@ const SldStage = ({
     setScale(newScale);
     setStagePos(newPos);
   };
-  const startConnect = (nodeId, side) => {
+  const startConnect = (nodeId, side, worldPos) => {
     setConnecting({
-      from: { nodeId, side },
+      from: { nodeId, side, ...worldPos},
       to: null
     });
   };
@@ -80,7 +80,11 @@ const SldStage = ({
       return;
     }
 
-    addArrowFromPorts(connecting.from, {nodeId: toNodeId, side: toSide});
+    // addArrowFromPorts(connecting.from, {nodeId: toNodeId, side: toSide});
+    addArrowFromPorts(
+    { nodeId: connecting.from.nodeId, side: connecting.from.side },
+    { nodeId: toNodeId, side: toSide }
+  );
     setConnecting(null);
 
   }
@@ -155,8 +159,12 @@ const SldStage = ({
               return (
                 <Arrow
                   points={[
-                    start.x,
-                    start.y,
+                    // start.x,
+                    // start.y,
+                    // connecting.to.x,
+                    // connecting.to.y
+                    connecting.from.x,
+                    connecting.from.y,
                     connecting.to.x,
                     connecting.to.y
                   ]}

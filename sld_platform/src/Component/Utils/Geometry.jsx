@@ -5,7 +5,7 @@ export const NODE_HEIGHT = 100;
 
 export function getNearestBoundaryPoint(node, x, y) {
 
-  const width = node.width || 100;
+  const width = node.width || 100;  
   const height = node.height || 100;
 
   const points = [
@@ -83,3 +83,38 @@ export function getPointAtT(points, t){
     y: segments.at(-1).y2
   };
 }
+
+
+export function getNodeCenter(node){
+  if(node.radius){
+    return {x: node.x, y: node.y}
+  }
+
+  return {
+    x: node.x + node.width/2,
+    y: node.y + node.height/2
+  }
+};
+
+
+export function getNodeBound(node) {
+  if(node.radius){
+    const r = node.radius
+    return {
+      left: node.x - r,
+      right: node.x + r,
+      top: node.y - r,
+      bottom: node.y + r,
+      width: r * 2, 
+      height: r * 2
+    }
+  }
+  return {
+    left: node.x,
+    right: node.x + node.width,
+    top: node.y,
+    bottom: node.y + node.height,
+    width: node.width,
+    height: node.height,
+  }
+};

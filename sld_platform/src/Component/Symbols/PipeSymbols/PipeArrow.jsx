@@ -4,12 +4,12 @@ import { getOrthogonalPath } from "../../Utils/OrthogonalPath";
 import { getWorldPointer } from "../../Utils/World";
 import { getPointAtT } from "../../Utils/Geometry";
 
-
 const PipeArrow = ({ arrow, selected, onSelect, onDragPort, stageRef, setEditingLabel }) => {
   if (!arrow?.start || !arrow?.end) return null;
 
   const isSelected = selected?.type === "edge" && selected?.id === arrow.id;
   const points = getOrthogonalPath(arrow.start, arrow.end);
+  const dragStartRef = useRef(null);
 
   /* ---------------- LABEL POSITION ---------------- */
   const label = arrow.label;
@@ -82,6 +82,31 @@ const PipeArrow = ({ arrow, selected, onSelect, onDragPort, stageRef, setEditing
         onMouseEnter={(e) => e.target.getStage().container().style.cursor = 'move'}
         onMouseLeave={(e) => e.target.getStage().container().style.cursor = 'default'}
         onDblClick={startLabelEditing}
+       draggable
+        onDragStart={(e) => {
+          e.cancelBubble = true;
+          dragRef.current = {
+            x: e.target.x(),
+            y: e.target.y()
+          };
+        }}
+        onDragMove={(e) => {
+          e.cancelBubble = true;
+
+          const dx = e.target.x() - dragRef.current.x;
+          const dy = e.target.y() - dragRef.current.y;
+
+          onMoveArrow(arrow.id, dx, dy);
+
+          dragRef.current = {
+            x: e.target.x(),
+            y: e.target.y()
+          };
+        }}
+        onDragEnd={(e) => {
+          e.cancelBubble = true;
+          e.target.position({ x: 0, y: 0 }); // important
+        }}
       />
       
       {/* ---------- LABEL ---------- */}
@@ -150,6 +175,7 @@ const PipeArrow = ({ arrow, selected, onSelect, onDragPort, stageRef, setEditing
           />
         </>
       )}
+      
     </>
   );
 };

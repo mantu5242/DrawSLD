@@ -3,7 +3,14 @@ import './Sidebar.css'
 const colors = ["#000000", "#ff0000", "#00aaff", "#2ecc71", "#f39c12"];
 
 const Sidebar = ({ addNode, addArrow, selected, onEdgeColorChange }) => (
-  <div className="sidebar">
+  <div className="sidebar" 
+    // style={{width: '260px',
+    // background-image: 'linear-gradient(#053a7a, #010147)', 
+    // color: 'white',
+    // padding: '12px',
+    // display: 'flex',
+    // flex-direction: 'column'}}
+  >
     <label className="sidebar-title">Nodes</label>
 
     {["BRANCH","CONSUMER", "ESDV", "PRS", "QPS", "SENSOR", "VALVE"].map(type => (

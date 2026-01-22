@@ -19,7 +19,8 @@ const SldStage = ({
   updateNode,
   resizeNode,
   updateArrowPort,
-  addArrowFromPorts
+  addArrowFromPorts,
+  moveArrow
 }) => {
   const trRef = useRef();
   const shapeRefs = useRef({});
@@ -99,6 +100,8 @@ const SldStage = ({
     }
   }, [selected]);
 
+
+
   return (
     <div className="canvas">
       <Stage
@@ -143,6 +146,7 @@ const SldStage = ({
             setSelected={setSelected}
             onDragPort={updateArrowPort}
             setEditingLabel = {setEditingLabel}
+            moveArrow = {moveArrow}
           />
             {connecting && (() => {
               console.log(connecting)

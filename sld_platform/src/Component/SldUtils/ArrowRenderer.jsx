@@ -5,7 +5,8 @@ const ArrowsRenderer = ({
   selected,
   setSelected,
   onDragPort,
-  setEditingLabel
+  setEditingLabel,
+  moveArrow
 }) =>
   arrows.map(a => (
     <PipeArrow
@@ -15,6 +16,7 @@ const ArrowsRenderer = ({
       onSelect={(id) => setSelected({ type: "edge", id })}
       onDragPort={onDragPort}
       setEditingLabel={setEditingLabel}
+      moveArrow = {moveArrow}
     />
   ));
 

@@ -13,7 +13,7 @@ const DrawSld = () => {
   const [editingLabel, setEditingLabel] = useState(null);
   const [connecting, setConnecting] = useState(null);
   const { nodes, addNode, updateNode, resizeNode, removeNode } = UseNodes();
-  const {  arrows, addArrow,addArrowFromPorts, updateArrowPort, updateArrowLabel, removeArrow, updateArrowColor, cleanupNodeArrows, syncArrowsWithNode } = useArrow(nodes);
+  const {  arrows, addArrow,addArrowFromPorts, updateArrowPort, updateArrowLabel, removeArrow, updateArrowColor, cleanupNodeArrows, syncArrowsWithNode, moveArrow } = useArrow(nodes);
 
   const handleUpdateNode = (id, x, y) => {
     updateNode(id, x, y);
@@ -80,6 +80,7 @@ const DrawSld = () => {
         resizeNode={handleResizeNode}
         updateArrowPort={updateArrowPort}
         addArrowFromPorts = {addArrowFromPorts}
+        moveArrow = {moveArrow}
         {...stageTransform}
       />
       {editingLabel && stageRef.current && (

@@ -26,7 +26,8 @@ export const UseNodes = () => {
     QPS : {width: 100, height: 80},
     ESDV : {width: 60, height: 30},
     CONSUMER: {width: 70, height: 60},
-    BRANCH: {radius: 20},
+    // BRANCH: {radius: 20},
+    BRANCH: {width: 30, height:30},
     VALVE: {width:60, height: 30},
     SENSOR: {width:60, height: 30}
   }
@@ -49,7 +50,7 @@ export const UseNodes = () => {
     setNodes(prev =>
       prev.map(n => n.id === id ? { ...n, x, y } : n)
     );
-    // console.log("position of the node",x, y)
+    console.log("position of the node",x, y)
 
   };
 

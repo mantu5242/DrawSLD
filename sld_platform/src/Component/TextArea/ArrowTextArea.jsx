@@ -22,7 +22,7 @@ const ArrowTextArea = ({editingLabel, setEditingLabel, commitLabelChange, stageR
             }}
             onBlur={commitLabelChange}
             onKeyDown={(e) => {
-            if (e.key === "Enter") {
+            if (e.key === "Escape") {
                 e.preventDefault();
                 // setEditingLabel(null);
                 commitLabelChange();

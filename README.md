@@ -53,3 +53,8 @@ json of -
 3. Draw the temporary line
 4. Finalize or Cancel the connection
 
+
+
+## Save/Load && Redo & Undo
+If you want to save and load then you can use the konva methods like - for saving -> node.toJSON(), for Loading -> node.create()
+** but this methods are usefull in very small apps.

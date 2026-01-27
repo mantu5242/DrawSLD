@@ -6,6 +6,7 @@ import { useArrow } from "../Component/Hooks/UseArrow";
 import { UseKeyDelete } from "../Component/Hooks/UseKeyDelete";
 import { useStageTransform } from "../Component/Hooks/UseStageTranformer";
 import ArrowTextArea from "../Component/TextArea/ArrowTextArea";
+import NavBar from "../Component/NavBar/NavBar";
 
 const DrawSld = () => {
   const [selected, setSelected] = useState({ type: null, id: null });
@@ -52,46 +53,49 @@ const DrawSld = () => {
 
 
   return (
-    <div className="drawsldmain">
-      <Sidebar 
-        addNode={addNode} 
-        addArrow={addArrow} 
-        selected={selected}
-        onEdgeColorChange={(color) => {
-          if (selected?.type === "edge") {
-            updateArrowColor(selected.id, color);
-          }
-        }}
-      />
-
-      <SldStage
-        stageRef = {stageRef}
-        setEditingLabel = {setEditingLabel}
-        connecting = {connecting}
-        setConnecting = {setConnecting}
-        nodes={nodes}
-        arrows={arrows}
-        selected={selected}
-        setSelected={(sel) => {
-          setSelected(sel);
-          setEditingLabel(null);  // stop editing on click
-        }}
-        updateNode={handleUpdateNode}
-        resizeNode={handleResizeNode}
-        updateArrowPort={updateArrowPort}
-        addArrowFromPorts = {addArrowFromPorts}
-        moveArrow = {moveArrow}
-        {...stageTransform}
-      />
-      {editingLabel && stageRef.current && (
-        <ArrowTextArea
-          editingLabel = { editingLabel}
-          setEditingLabel = {setEditingLabel}
-          commitLabelChange = {commitLabelChange}
-          stageRef = { stageRef }
+    <>
+      <NavBar stageRef={stageRef}/>
+      <div className="drawsldmain">
+        <Sidebar 
+          addNode={addNode} 
+          addArrow={addArrow} 
+          selected={selected}
+          onEdgeColorChange={(color) => {
+            if (selected?.type === "edge") {
+              updateArrowColor(selected.id, color);
+            }
+          }}
         />
-      )}
-    </div>
+
+        <SldStage
+          stageRef = {stageRef}
+          setEditingLabel = {setEditingLabel}
+          connecting = {connecting}
+          setConnecting = {setConnecting}
+          nodes={nodes}
+          arrows={arrows}
+          selected={selected}
+          setSelected={(sel) => {
+            setSelected(sel);
+            setEditingLabel(null);  // stop editing on click
+          }}
+          updateNode={handleUpdateNode}
+          resizeNode={handleResizeNode}
+          updateArrowPort={updateArrowPort}
+          addArrowFromPorts = {addArrowFromPorts}
+          moveArrow = {moveArrow}
+          {...stageTransform}
+        />
+        {editingLabel && stageRef.current && (
+          <ArrowTextArea
+            editingLabel = { editingLabel}
+            setEditingLabel = {setEditingLabel}
+            commitLabelChange = {commitLabelChange}
+            stageRef = { stageRef }
+          />
+        )}
+      </div>
+    </>
   );
 };
 

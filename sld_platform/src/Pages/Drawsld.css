@@ -55,5 +55,6 @@
 /* Canvas */
 .canvas {
   flex: 1;
-  background: #cad2e2;
+  /* background: #cad2e2; */
+  background-color: black;
 }

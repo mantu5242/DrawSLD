@@ -22,14 +22,14 @@ export const UseNodes = () => {
   }, [nodes]);
 
   const Node_def = {
-    PRS : {width:80, height: 60},
-    QPS : {width: 100, height: 80},
+    PRS : {width:80, height: 50},
+    QPS : {width: 100, height: 50},
     ESDV : {width: 60, height: 30},
-    CONSUMER: {width: 70, height: 60},
+    CONSUMER: {width: 50, height: 40},
     // BRANCH: {radius: 20},
     BRANCH: {width: 30, height:30},
     VALVE: {width:60, height: 30},
-    SENSOR: {width:60, height: 30}
+    SENSOR: {width:50, height: 30}
   }
 
   const addNode = (type) => {

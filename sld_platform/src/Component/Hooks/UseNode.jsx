@@ -21,7 +21,7 @@ export const UseNodes = () => {
     );
   }, [nodes]);
 
-  const Node_def = {
+  const Node_def = {  
     PRS : {width:80, height: 50},
     QPS : {width: 100, height: 50},
     ESDV : {width: 60, height: 30},
@@ -66,5 +66,5 @@ export const UseNodes = () => {
     setNodes(prev => prev.filter(n => n.id !== id));
   };
 
-  return { nodes, addNode, updateNode, resizeNode, removeNode };
+  return { nodes,setNodes, addNode, updateNode, resizeNode, removeNode, setNodes };
 };

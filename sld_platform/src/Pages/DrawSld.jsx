@@ -13,8 +13,19 @@ const DrawSld = () => {
   const stageRef = useRef(null);
   const [editingLabel, setEditingLabel] = useState(null);
   const [connecting, setConnecting] = useState(null);
-  const { nodes, addNode, updateNode, resizeNode, removeNode } = UseNodes();
-  const {  arrows, addArrow,addArrowFromPorts, updateArrowPort, updateArrowLabel, removeArrow, updateArrowColor, cleanupNodeArrows, syncArrowsWithNode, moveArrow } = useArrow(nodes);
+  const { nodes, setNodes, addNode, updateNode, resizeNode, removeNode} = UseNodes();
+  const {  arrows, setArrows, addArrow,addArrowFromPorts, updateArrowPort, updateArrowLabel, removeArrow, updateArrowColor, cleanupNodeArrows, syncArrowsWithNode, moveArrow } = useArrow(nodes);
+
+  const handleImport = (json) => {
+    // const json = JSON.parse(data);
+    console.log(typeof json);
+    if(!json?.nodes || !json?.arrows){
+      console.error("Invalid SLD file structure");
+      return ;
+    }
+    setNodes(json.nodes);
+    setArrows(json.arrows);
+  }
 
   const handleUpdateNode = (id, x, y) => {
     updateNode(id, x, y);
@@ -54,7 +65,7 @@ const DrawSld = () => {
 
   return (
     <>
-      <NavBar stageRef={stageRef}/>
+      <NavBar stageRef={stageRef} onImport = {handleImport}/>
       <div className="drawsldmain">
         <Sidebar 
           addNode={addNode} 

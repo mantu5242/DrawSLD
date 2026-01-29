@@ -279,6 +279,7 @@ export const useArrow = (nodes) => {
 
   return {
     arrows,
+    setArrows,
     addArrow,
     addArrowFromPorts,
     updateArrowPort,
@@ -286,6 +287,7 @@ export const useArrow = (nodes) => {
     syncArrowsWithNode,
     removeArrow,
     updateArrowColor,
-    cleanupNodeArrows
+    cleanupNodeArrows,
+    setArrows
   };
 };

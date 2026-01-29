@@ -58,3 +58,12 @@ json of -
 ## Save/Load && Redo & Undo
 If you want to save and load then you can use the konva methods like - for saving -> node.toJSON(), for Loading -> node.create()
 ** but this methods are usefull in very small apps.
+
+# load json to produce SLD
+It is very complex part to implement this using Konvajs inbuilt functions.
+If one simple load the json of sld then it will produce the sld but it will be a snapshot because the javascript function cannot pass through, so...
+
+BETTER APPROACH -----
+
+shift from serializing the canvas stage to serializing the application stage.
+Pattern -> state-driven pattern

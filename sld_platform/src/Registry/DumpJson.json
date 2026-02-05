@@ -1,0 +1,112 @@
+{
+  "id": "qps_1",
+  "type": "QPS",
+  "name": "QPS-1",
+  "pressure": "19 bar",
+  "flowRate": "1200 SCMH",
+  "status": "ACTIVE",
+  "children": [
+    {
+      "id": "gb_1",
+      "type": "GB",
+      "name": "GB-1",
+      "pressure": "18.5 bar",
+      "status": "ACTIVE",
+      "children": [
+        {
+          "id": "joint_1",
+          "type": "JOINT",
+          "name": "Joint-1",
+          "status": "OK",
+          "children": [
+            {
+              "id": "street_reg_1",
+              "type": "STREET_REGULATOR",
+              "name": "Street Regulator-1",
+              "inletPressure": "18 bar",
+              "outletPressure": "4 bar",
+              "status": "ACTIVE",
+              "children": [
+                {
+                  "id": "gb_4",
+                  "type": "GB",
+                  "name": "GB-4",
+                  "pressure": "4 bar",
+                  "children": [
+                    {
+                      "id": "regulator_1",
+                      "type": "REGULATOR",
+                      "name": "Regulator-1",
+                      "setPressure": "1.5 bar",
+                      "status": "ACTIVE",
+                      "children": [
+                        {
+                          "id": "reducer_1",
+                          "type": "REDUCER",
+                          "name": "Reducer-1",
+                          "from": "1.5 bar",
+                          "to": "0.5 bar",
+                          "status": "ACTIVE",
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "id": "gb_5",
+                      "type": "GB",
+                      "name": "GB-5",
+                      "pressure": "4 bar",
+                      "children": [
+                        {
+                          "id": "joint_3",
+                          "type": "JOINT",
+                          "name": "Joint-3",
+                          "children": [
+                            {
+                              "id": "street_reg_2",
+                              "type": "STREET_REGULATOR",
+                              "name": "Street Regulator-2",
+                              "inletPressure": "4 bar",
+                              "outletPressure": "1 bar",
+                              "children": [
+                                {
+                                  "id": "regulator_2",
+                                  "type": "REGULATOR",
+                                  "name": "Regulator-2",
+                                  "setPressure": "0.8 bar",
+                                  "children": [
+                                    {
+                                      "id": "reducer_3",
+                                      "type": "REDUCER",
+                                      "name": "Reducer-3",
+                                      "from": "0.8 bar",
+                                      "to": "0.3 bar",
+                                      "status": "ACTIVE",
+                                      "children": []
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gb_2",
+      "type": "GB",
+      "name": "GB-2",
+      "pressure": "18.5 bar",
+      "status": "ACTIVE",
+      "children": []
+    }
+  ]
+}

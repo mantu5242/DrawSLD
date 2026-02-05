@@ -13,7 +13,7 @@ const Sidebar = ({ addNode, addArrow, selected, onEdgeColorChange }) => (
   >
     <label className="sidebar-title">Nodes</label>
 
-    {["BRANCH","CONSUMER", "ESDV", "PRS", "QPS", "SENSOR", "VALVE"].map(type => (
+    {["BRANCH","CONSUMER", "ESDV","GB", "METER", "PRS", "QPS", "REGULATOR", "REDUCER", "SENSOR", "STREETREGULATOR", "VALVE"].map(type => (
       <div
         key={type}
         className="drawsldblock"

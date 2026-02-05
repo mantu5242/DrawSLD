@@ -1,7 +1,9 @@
 import React, { useRef } from 'react'
+import './NavBar.css'
 import Esyasoft_Holding from '../../assets/Esyasoft_Holding.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDownload, faFileUpload, faFloppyDisk, faRotateLeft, faRotateRight } from '@fortawesome/free-solid-svg-icons'
+import { ConvertSematicToLayout } from '../Utils/ImportRealJson'
 
 
 const NavBar = ({stageRef, onImport}) => {
@@ -33,13 +35,14 @@ const NavBar = ({stageRef, onImport}) => {
       console.error('download error', error)
     }
   }
-  const handleSave = () => {
-
-  }
-
   const handleUploadIconClick = () => {
     fileInputRef.current.click();
   }
+
+
+
+
+
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -50,9 +53,13 @@ const NavBar = ({stageRef, onImport}) => {
       try{
         const content = event.target.result;
         const parseData = JSON.parse(content);
+
+
+        const realData =  ConvertSematicToLayout(parseData);
+        
         // console.log(parseData);
-        console.log(typeof parseData)
-        onImport(parseData);
+        // console.log(typeof parseData)
+        onImport(realData);
       }
       catch(error){
         console.error("invalid JSON file", error);
@@ -72,12 +79,12 @@ const NavBar = ({stageRef, onImport}) => {
         {/* <div sty> */}
           <img src={Esyasoft_Holding} alt='Esyasoft_Holding_logo' style={{ width:'7wh', height:'5vh'}}/>
           <div style={{display:'flex', gap:'20px'}}>
-           <FontAwesomeIcon icon={faRotateLeft} style={{ color: '#d7e9f4', height:'3vh' } } onClick={handleUndo} />
-           <FontAwesomeIcon icon={faRotateRight} style={{ color: '#d7e9f4', height:'3vh' }} onClick={handleRedo}/>
-           <FontAwesomeIcon icon={faFloppyDisk} style={{ color: '#d7e9f4', height:'3vh' }} onClick={handleSave}/>
-           <FontAwesomeIcon icon={faDownload} style={{ color: '#d7e9f4', height:'3vh' }} onClick={handleDownload}/>
-           <div style={{display:'inline-block', cursor:'pointer', height:'5vh'}} onClick={handleUploadIconClick}>
-            <FontAwesomeIcon icon={faFileUpload} style={{ color: '#d7e9f4', height:'3vh' }} />
+           <FontAwesomeIcon className='icons' icon={faRotateLeft}  onClick={handleUndo} />
+           <FontAwesomeIcon className='icons' icon={faRotateRight} onClick={handleRedo}/>
+           {/* <FontAwesomeIcon className='icons' icon={faFloppyDisk} onClick={handleSave}/> */}
+           <FontAwesomeIcon className='icons' icon={faDownload} onClick={handleDownload}/>
+           <div style={{display:'flex', cursor:'pointer',}} onClick={handleUploadIconClick}>
+            <FontAwesomeIcon className='icons' icon={faFileUpload} />
             <input type='file' ref={fileInputRef} style={{display:'none'}} accept='.json' onChange={handleFileChange}/>
            </div>
 

@@ -67,3 +67,8 @@ BETTER APPROACH -----
 
 shift from serializing the canvas stage to serializing the application stage.
 Pattern -> state-driven pattern
+
+
+
+
+

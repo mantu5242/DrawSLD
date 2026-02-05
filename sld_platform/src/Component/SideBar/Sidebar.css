@@ -27,6 +27,7 @@
   padding: 12px;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 }
 
 .sidebar-title {
@@ -45,6 +46,7 @@
   border-radius: 6px;
   cursor: pointer;
   transition: background 0.2s;
+
 }
 
 .drawsldblock:hover {
@@ -56,4 +58,18 @@
 .canvas {
   flex: 1;
   background: #cad2e2;
+}
+
+
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(157, 157, 157, 0.3);
+  border-radius: 4px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
 }

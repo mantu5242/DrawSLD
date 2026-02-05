@@ -1,0 +1,9 @@
+.icons{
+    color: #d7e9f4;
+    height: 3vh;
+    cursor: pointer;
+} 
+.icons:active{
+    color: #abbac4;
+    transform: translateY(1px);
+}   

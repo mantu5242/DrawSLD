@@ -56,7 +56,6 @@ export function ConvertSematicToLayout(input){
         }
     }
 
-    // console.log("layer -> ",layer)
 
     // assign width and height
 
@@ -75,7 +74,7 @@ export function ConvertSematicToLayout(input){
         layers[l].push(id)
     })
 
-    console.log(layers)
+    // console.log(layers)
     const H_GAP = 200
     const V_GAP = 120
     const START_X = 100
@@ -120,21 +119,57 @@ export function ConvertSematicToLayout(input){
             a.end.x = endPt.x
             a.end.y = endPt.y
             a.end.attachedTo.side = endSide
-        })
+        }
+    )
 
-        console.log({nodes, arrows})
+    // resolve the position of the label of arrow
+    arrows.forEach(a => {
+        if(!a.label) return;
+        const {x,y} = computeArrowLabelPosition(a);
+        a.label.x = x;
+        a.label.y = y;
+        a.label.visible = true;
+    })
+    console.log({nodes, arrows})
     return { nodes, arrows }
 }
 
-function portPoint(node, side) {
-  switch (side) {
-    case "left":
-      return { x: node.x, y: node.y + node.height / 2 }
-    case "right":
-      return { x: node.x + node.width, y: node.y + node.height / 2 }
-    case "top":
-      return { x: node.x + node.width / 2, y: node.y }
-    case "bottom":
-      return { x: node.x + node.width / 2, y: node.y + node.height }
-  }
+const portPoint = (node, side) => {
+    switch (side) {
+        case "left":
+        return { x: node.x, y: node.y + node.height / 2 }
+        case "right":
+        return { x: node.x + node.width, y: node.y + node.height / 2 }
+        case "top":
+        return { x: node.x + node.width / 2, y: node.y }
+        case "bottom":
+        return { x: node.x + node.width / 2, y: node.y + node.height }
+    }
+}
+
+
+const computeArrowLabelPosition = (arrow) => {
+    const x1 = arrow.start.x;
+    const y1 = arrow.start.y;
+    const x2 = arrow.end.x;
+    const y2 = arrow.end.y;
+
+    const t = arrow.label?.t ?? 0.5;
+    const offset = arrow.label?.offset ?? {x:0 ,y:0};
+
+    const px = x1 + (x2 - x1) * t;
+    const py = y1 + (y2 - y1) * t;
+
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+
+    const len = Math.hypot(dy,dx) || 1;
+
+    const nx = -dy / len;
+    const ny = dx / len;
+
+    return {
+        x : px + nx * offset.y + offset.x,
+        y : py + ny * offset.y + offset.x
+    }
 }

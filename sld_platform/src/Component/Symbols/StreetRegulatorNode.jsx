@@ -1,13 +1,13 @@
 import { Text } from "react-konva";
 import BaseNode from "./BaseNode";
 
-const PrsNode = (props) => {
+const StreetRegulatorNode = (props) => {
   const { node } = props;
 
-  return (
+  return (  
     <BaseNode {...props}>
       <Text
-        text="PRS"
+        text="str_Reg"
         width={node.width}
         height={node.height}
         align="center"
@@ -17,4 +17,4 @@ const PrsNode = (props) => {
   );
 };
 
-export default PrsNode;
+export default StreetRegulatorNode;

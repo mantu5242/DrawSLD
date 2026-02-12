@@ -1,13 +1,13 @@
 import { Text } from "react-konva";
-import BaseNode from "./BaseNode";
+import BaseNode from "./BaseNodes/BaseNode3";
 
-const PrsNode = (props) => {
+const JointNode = (props) => {
   const { node } = props;
 
   return (
     <BaseNode {...props}>
       <Text
-        text="PRS"
+        text="J"
         width={node.width}
         height={node.height}
         align="center"
@@ -17,4 +17,4 @@ const PrsNode = (props) => {
   );
 };
 
-export default PrsNode;
+export default JointNode;

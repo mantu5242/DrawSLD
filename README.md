@@ -72,3 +72,20 @@ Pattern -> state-driven pattern
 
 
 
+
+
+
+1.  qps ---({filler1, filler2, filler3})---> gb
+    here
+    1. qps (lat,long) should be same as (lat,long) of filler1 
+
+    It is required for finding starting and ending point of edge
+
+
+
+2. filler1(overhead) --- filler2(overhead) -- filler3(underground) --- filler4(underground) ---> node
+    1. filler1 and filler2 should have same IDs
+
+    as it is represent the single connection edge(high level view -> sld diagram)
+
+3. 

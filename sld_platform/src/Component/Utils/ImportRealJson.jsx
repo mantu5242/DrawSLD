@@ -84,7 +84,14 @@ export function ConvertSematicToLayout(input){
         let y = START_Y - ((ids.length - 1) * V_GAP) / 2
         ids.forEach(id => {
         const n = nodeMap[id]
-        n.x = START_X + l * H_GAP
+
+        // direction = child2 <- child1 <- parent
+
+        const maxLayer = Math.max(...Object.keys(layers).map(Number));
+        n.x = START_X + (maxLayer - l) * H_GAP;
+
+        // doing above , direction = parent -> child1 -> child2
+        
         n.y = y
         y += V_GAP
         })

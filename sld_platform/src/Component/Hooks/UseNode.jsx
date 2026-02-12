@@ -26,14 +26,22 @@ export const UseNodes = () => {
     QPS : {width: 100, height: 50},
     ESDV : {width: 60, height: 30},
     CONSUMER: {width: 50, height: 40},
-    // BRANCH: {radius: 20},
+    REGULATOR: {width:60, height: 30},
+    STREETREGULATOR: {width:60, height: 30},
+    REDUCER: {width:60, height: 30},
+    METER: {width:60, height: 30},
+    GB: {width:60, height: 30},
+    REGULATOR: {width:60, height: 30},
     BRANCH: {width: 30, height:30},
     VALVE: {width:60, height: 30},
     SENSOR: {width:50, height: 30}
   }
 
   const addNode = (type) => {
+    console.log("nodes come")
+    console.log("type", type);
     const def = Node_def[type];
+    console.log(def);
     setNodes(prev => [
       ...prev,
       {
@@ -50,7 +58,7 @@ export const UseNodes = () => {
     setNodes(prev =>
       prev.map(n => n.id === id ? { ...n, x, y } : n)
     );
-    console.log("position of the node",x, y)
+    // console.log("position of the node",x, y)
 
   };
 

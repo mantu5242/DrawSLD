@@ -64,7 +64,7 @@ const DrawSld = () => {
 
 
   return (
-    <>
+    <div className="project-main-page">
       <NavBar stageRef={stageRef} onImport = {handleImport}/>
       <div className="drawsldmain">
         <Sidebar 
@@ -106,7 +106,7 @@ const DrawSld = () => {
           />
         )}
       </div>
-    </>
+    </div>
   );
 };
 

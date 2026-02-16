@@ -31,17 +31,18 @@ export const UseNodes = () => {
     REDUCER: {width:60, height: 30},
     METER: {width:60, height: 30},
     GB: {width:60, height: 30},
-    REGULATOR: {width:60, height: 30},
+    REGULATOR: {width:60, height: 30},  
     BRANCH: {width: 30, height:30},
     VALVE: {width:60, height: 30},
-    SENSOR: {width:50, height: 30}
+    SENSOR: {width:50, height: 30},
+    JOINT: {width: 30, height:30}
   }
 
   const addNode = (type) => {
     console.log("nodes come")
     console.log("type", type);
     const def = Node_def[type];
-    console.log(def);
+    console.log(def)
     setNodes(prev => [
       ...prev,
       {

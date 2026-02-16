@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDownload, faFileUpload, faFloppyDisk, faRotateLeft, faRotateRight } from '@fortawesome/free-solid-svg-icons'
 import { ConvertSematicToLayout } from '../Utils/ImportRealJson'
 import Papa from 'papaparse';
+import { LuArrowDownToLine, LuClipboardPen, LuImport, LuRedo, LuUndo, LuZoomIn, LuZoomOut } from "react-icons/lu";
+
 
 
 const NavBar = ({stageRef, onImport}) => {
@@ -52,7 +54,7 @@ const NavBar = ({stageRef, onImport}) => {
     2: "OUTLETPIPE",
     3: "METER",
     4: "GB",
-    5: "JOINTS",
+    5: "JOINT",
     6: "STREETREGULATOR",
     7: "REGULATOR",
     8: "CONSUMER",
@@ -67,19 +69,18 @@ const NavBar = ({stageRef, onImport}) => {
     const arrows = []
     const nodeMap = {}
     const adj = {}
+    let counter = 0;
     let countArrow = 1;
+    
 
     // Object.keys(adj).forEach(nodeId => {
     //   adj[nodeId] = [];
     // })
-
     rows.forEach(row => {
       const objType = Number(row.obj_ref_id);
-      // const parentId = "n" + row.parent;
-      // const child = "n" + row.id;
-      // adj[parentId].push(child);
-      // console.log(row)
-      if(objType !== 9){
+      if(objType !== 9 && objType >= -1){
+        // console.log(counter++);
+        // console.log(row.id); 
         const nodeId = 'n' + row.id;
         const node = {
           id: nodeId,
@@ -161,8 +162,11 @@ const NavBar = ({stageRef, onImport}) => {
         header:true,
         complete : (result) => {
           const rows = result.data;
-          const {nodes,arrows} = convertTojson(rows);
-          console.log({nodes,arrows});
+          const realData = convertTojson(rows);
+          // console.log(realData);
+          // const parseData = JSON.parse(realData);
+          const realDataJson =  ConvertSematicToLayout(realData);
+          onImport(realDataJson);
         }
       })
     }
@@ -172,8 +176,8 @@ const NavBar = ({stageRef, onImport}) => {
     //   console.log("inside the handlefilechange")
     //   try{
     //     const content = event.target.result;
-    //     const parseData = JSON.parse(content);
-    //     const realData =  ConvertSematicToLayout(parseData);
+        // const parseData = JSON.parse(content);
+        // const realData =  ConvertSematicToLayout(parseData);
     //     onImport(realData);
     //   }
     //   catch(error){
@@ -189,22 +193,32 @@ const NavBar = ({stageRef, onImport}) => {
 
 
   return (
-    <div style={{width: '100wh', height: '8vh', backgroundColor:'#010147', borderBottomWidth:'3px', borderColor:'#07075d', display:'flex',alignItems:'center', paddingLeft:'10px', paddingRight:'10px', justifyContent:'space-between'}}>
+    <div className='navbar-mainblock'>
         
-        {/* <div sty> */}
-          <img src={Esyasoft_Holding} alt='Esyasoft_Holding_logo' style={{ width:'7wh', height:'5vh'}}/>
-          <div style={{display:'flex', gap:'20px'}}>
-           <FontAwesomeIcon className='icons' icon={faRotateLeft}  onClick={handleUndo} />
-           <FontAwesomeIcon className='icons' icon={faRotateRight} onClick={handleRedo}/>
-           {/* <FontAwesomeIcon className='icons' icon={faFloppyDisk} onClick={handleSave}/> */}
-           <FontAwesomeIcon className='icons' icon={faDownload} onClick={handleDownload}/>
-           <div style={{display:'flex', cursor:'pointer',}} onClick={handleUploadIconClick}>
-            <FontAwesomeIcon className='icons' icon={faFileUpload} />
+      {/* <div sty> */}
+        <img src={Esyasoft_Holding} alt='Esyasoft_Holding_logo' style={{ width:'5wh', height:'6vh', display:'flex', alignItems:'center'
+        }}/>
+        <div className='NavbarButtonDiv'>
+        <div className='NavbarIconButton first' >
+          <button className='navbarbutton icons' onClick={handleUndo}><LuUndo style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}} /></button>
+          <button className='navbarbutton icons' onClick={handleRedo}><LuRedo style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}} /></button>
+        </div>
+        <div className='NavbarIconButton second' >
+          <button className='navbarbutton icons' ><LuClipboardPen style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}} /></button>
+          <button className='navbarbutton icons' onClick={handleDownload}><LuArrowDownToLine style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}} /></button>
+          <button className='navbarbutton icons' onClick={handleUploadIconClick}>
+            <LuImport style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}} />
             <input type='file' ref={fileInputRef} style={{display:'none'}} accept='.csv' onChange={handleFileChange}/>
-           </div>
-
+            </button>
+        </div>
+        <div className='NavbarIconButton third  '>
+          <div className='zoom-box'>
+            <button className='navbarbutton icons'><LuZoomIn style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}}/></button>
+            <div className='zoom-percent-display'>100%</div>
+            <button className='navbarbutton icons'><LuZoomOut style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}}/></button>
           </div>
-        {/* </div> */}
+        </div>
+        </div>
     </div>
   )
 }

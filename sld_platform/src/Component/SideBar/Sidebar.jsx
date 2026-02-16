@@ -1,22 +1,25 @@
+import { LuSearch } from 'react-icons/lu';
 import './Sidebar.css'
+import ObjectListDropdown from './ObjectListDropdown';
 
 const colors = ["#000000", "#ff0000", "#00aaff", "#2ecc71", "#f39c12"];
 
 const Sidebar = ({ addNode, addArrow, selected, onEdgeColorChange }) => (
+
   <div className="sidebar">
-    <label className="sidebar-title">Nodes</label>
-
-    {["BRANCH","CONSUMER", "ESDV","GB", "METER", "PRS", "QPS", "REGULATOR", "REDUCER", "SENSOR", "STREETREGULATOR", "VALVE"].map(type => (
-      <div
-        key={type}
-        className="drawsldblock"
-        onClick={() => addNode(type)}
-      >
-        {type}
+    <div className='sidebar-upperbox'>
+      <div className="sidebar-title">Components</div>
+      <div className='sidebar-search-container'>
+        <LuSearch className='search-icon' style={{color:"rgba(57, 57, 57, 0.564)"}}/>
+        <input className='sidebar-search-engine' type='text' placeholder='Search nodes...'></input>
       </div>
-    ))}
+    </div>
+    <div className='sidebar-midbox'>
+      <ObjectListDropdown addNode={addNode} addArrow={addArrow}/>
+    </div>
+    
 
-    <label className="sidebar-title">Pipes</label>
+    {/* <label className="sidebar-title">Pipes</label>
     <div className="drawsldblock" onClick={addArrow}>
       Arrow
     </div>
@@ -42,7 +45,7 @@ const Sidebar = ({ addNode, addArrow, selected, onEdgeColorChange }) => (
           }}
         />
       ))}
-    </div>
+    </div> */}
   </div>
 );
 

@@ -5,10 +5,16 @@ const Node_def = {
     QPS : {width: 100, height: 50},
     ESDV : {width: 60, height: 30},
     CONSUMER: {width: 50, height: 40},
-    // BRANCH: {radius: 20},
+    REGULATOR: {width:60, height: 30},
+    STREETREGULATOR: {width:60, height: 30},
+    REDUCER: {width:60, height: 30},
+    METER: {width:60, height: 30},
+    GB: {width:60, height: 30},
+    REGULATOR: {width:60, height: 30},
     BRANCH: {width: 30, height:30},
     VALVE: {width:60, height: 30},
-    SENSOR: {width:50, height: 30}
+    SENSOR: {width:50, height: 30},
+    JOINT: {width: 30, height:30},
   }
 
 
@@ -32,12 +38,15 @@ export function ConvertSematicToLayout(input){
     arrows.forEach(a => {
         const v = a.start.attachedTo.nodeId;
         const u = a.end.attachedTo.nodeId;
-        adj.get(u).push(v);
-        indeg.set(v,indeg.get(u) + 1);
+        adj.get(v).push(u);
+        indeg.set(u,indeg.get(u)+1);
     });
 
+    console.log("adjency list = ",adj)
     // find root of the graph
+    console.log("indegree - ", indeg)
     const roots = nodes.filter(n => indeg.get(n.id) === 0).map(n => n.id)
+    console.log("rootNode - ",roots);
 
     // BFS Layering
     const layer = new Map()
@@ -45,6 +54,8 @@ export function ConvertSematicToLayout(input){
     roots.forEach(r => {layer.set( r, 0 )
         q.push(r)
     })
+
+    console.log("queue",q);
 
     while(q.length){
         const u = q.shift();
@@ -58,9 +69,12 @@ export function ConvertSematicToLayout(input){
 
 
     // assign width and height
+    // console.log(nodes)
 
     nodes.forEach(n => {
         const size = Node_def[n.type];
+        // console.log("node width",n.type)
+        // console.log("acutal", size.width)
         n.width = size.width;
         n.height = size.height;
     })
@@ -74,26 +88,22 @@ export function ConvertSematicToLayout(input){
         layers[l].push(id)
     })
 
-    // console.log(layers)
+    console.log("Layers - ",layers)
     const H_GAP = 200
     const V_GAP = 120
     const START_X = 100
     const START_Y = 300
 
     Object.entries(layers).forEach(([l, ids]) => {
+        // console.log("l - ",l,"ids ",ids)
         let y = START_Y - ((ids.length - 1) * V_GAP) / 2
+        console.log("y",y);
         ids.forEach(id => {
-        const n = nodeMap[id]
-
-        // direction = child2 <- child1 <- parent
-
-        const maxLayer = Math.max(...Object.keys(layers).map(Number));
-        n.x = START_X + (maxLayer - l) * H_GAP;
-
-        // doing above , direction = parent -> child1 -> child2
-        
-        n.y = y
-        y += V_GAP
+            const n = nodeMap[id]
+            n.x = START_X + l * H_GAP;
+            n.y = y
+            y += V_GAP
+            console.log("coordinates ",n.x,n.y)
         })
     })
 

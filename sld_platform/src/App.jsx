@@ -10,7 +10,7 @@ function App() {
 
 
   return (
-    <React.StrictMode> 
+    <React.StrictMode className="mainBlock-project"> 
     {/* <NavBar/> */}
     <BrowserRouter>
       <Routes>

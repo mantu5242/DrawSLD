@@ -1,0 +1,51 @@
+.sidebar-section {
+  margin-bottom: 10px;
+  padding: 12px;
+}
+
+/* Header */
+.sidebar-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  /* padding: 10px 0px; */
+  cursor: pointer;
+  color: #4b5563;
+  transition: 0.2s ease;
+  padding: 4px 4px;
+}
+
+/* Dropdown content animation */
+.sidebar-section-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  /* background-color: rgba(205, 206, 212, 0.269); */
+  /* padding: 12px; */
+}
+
+.sidebar-section-content.open {
+  max-height: 1000px; /* large enough */
+}
+
+/* Component blocks */
+.drawsldblock {
+  background: #ffffff;
+  padding: 12px;
+  margin: 8px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.25s ease;
+  border: 2px solid rgba(149, 149, 149, 0.541);
+  font-size: small;
+}
+
+.drawsldblock:hover {
+  /* background: #f5f3f3e2; */
+  border: 2px solid #d1d5db;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.21);
+  /* transform: translateY(-2px); */
+}

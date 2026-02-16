@@ -1,60 +1,14 @@
 #drawsldmain{
-    display: flex;
-    width: 10vw;
-    height: 100vh;
-    border-color: black;
-    border-width: 2px;
-}
-
-#drawsldblock{
-    border-width: 2px;
-    border-color: black;
-}
-
-.drawsldmain {
-  display: flex;    
-  height: 100vh;
-  background: #f1f5f9;
-}
-
-/* Sidebar */
-.sidebar {
-  width: 260px;
-  /* background: #2a21ab; */
-  background-image: linear-gradient(#053a7a, #010147);
-  
-  color: white;
-  padding: 12px;
+  flex: 1;                 /* Takes remaining space */
   display: flex;
+  overflow: hidden; 
+  height: 100%;
+}
+
+.project-main-page{
+  /* height: 100vh; */
+  display: flex ;
+  height: 100vh;
   flex-direction: column;
-}
-
-.sidebar-title {
-  font-size: 20px;
-  margin-bottom: 10px;
-  color: #fdfdfd;
-  font-weight: 600;
-}
-
-/* Node blocks */
-.drawsldblock {
-  padding: 12px;
-  margin-bottom: 6px;
-  background: #010821;
-   background-image: linear-gradient(#010821, #0e1735);
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.drawsldblock:hover {
-  /* background: #162046; */
-   background-image: linear-gradient(#010d34, #051139);
-}
-
-/* Canvas */
-.canvas {
-  flex: 1;
-  /* background: #cad2e2; */
-  background-color: black;
+  overflow: hidden;
 }

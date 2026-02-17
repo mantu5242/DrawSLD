@@ -1,133 +1,63 @@
-// import { useState } from "react";
-// import { LuChevronDown, LuChevronRight } from "react-icons/lu";
-// import "./ObjectListDropdown.css";
-
-// const ObjectListDropdown = ({ addNode }) => {
-//   const [openMeasurement, setOpenMeasurement] = useState(true);
-//   const [openStorage, setOpenStorage] = useState(true);
-//   const [openController, setOpenController] = useState(true);
-//   const [openInfrastructure, setOpenInfrastructure] = useState(true);
-
-//   const Measurements = ["QPS", "METER", "SENSOR"];
-//   const Storage = ["GB"];
-//   const Controller = ["PRS", "ESDV", "REGULATOR", "REDUCER","STREETREGULATOR", "VALVE"];
-//   const Infrastructure = ["PIPE"]
-
-//   return (
-//     <div className="sidebar-section">
-      
-//       {/* Header */}
-//       <div 
-//         className="sidebar-section-header"
-//         onClick={() => setOpenMeasurement(!openMeasurement)}
-//       >
-//         {openMeasurement ? <LuChevronDown size={18}/> : <LuChevronRight size={18}/>}
-//         <span>Measurement</span>
-//       </div>
-
-//       {/* Dropdown Content */}
-//       <div className={`sidebar-section-content ${open ? "open" : ""}`}>
-//         {Measurements.map(type => (
-//           <div
-//             key={type}
-//             className="drawsldblock"
-//             onClick={() => addNode(type)}
-//           >
-//             {type}
-//           </div>
-//         ))}
-//       </div>
-
-//       <div 
-//         className="sidebar-section-header"
-//         onClick={() => setOpen(!openStorage)}
-//       >
-//         {open ? <LuChevronDown size={18}/> : <LuChevronRight size={18}/>}
-//         <span>Storage</span>
-//       </div>
-
-//       {/* Dropdown Content */}
-//       <div className={`sidebar-section-content ${open ? "open" : ""}`}>
-//         {Storage.map(type => (
-//           <div
-//             key={type}
-//             className="drawsldblock"
-//             onClick={() => addNode(type)}
-//           >
-//             {type}
-//           </div>
-//         ))}
-//       </div>
-
-//       <div 
-//         className="sidebar-section-header"
-//         onClick={() => setOpen(!openController)}
-//       >
-//         {open ? <LuChevronDown size={18}/> : <LuChevronRight size={18}/>}
-//         <span>Controllers</span>
-//       </div>
-
-//       {/* Dropdown Content */}
-//       <div className={`sidebar-section-content ${open ? "open" : ""}`}>
-//         {Controller.map(type => (
-//           <div
-//             key={type}
-//             className="drawsldblock"
-//             onClick={() => addNode(type)}
-//           >
-//             {type}
-//           </div>
-//         ))}
-//       </div>
-
-//       <div 
-//         className="sidebar-section-header"
-//         onClick={() => setOpen(!openInfrastructure)}
-//       >
-//         {open ? <LuChevronDown size={18}/> : <LuChevronRight size={18}/>}
-//         <span>Infrastructure</span>
-//       </div>
-
-//       {/* Dropdown Content */}
-//       <div className={`sidebar-section-content ${open ? "open" : ""}`}>
-//         {Infrastructure.map(type => (
-//           <div
-//             key={type}
-//             className="drawsldblock"
-//             onClick={() => addNode(type)}
-//           >
-//             {type}
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ObjectListDropdown;
-
-
 import { useState } from "react";
 import { LuChevronDown, LuChevronRight } from "react-icons/lu";
 import "./ObjectListDropdown.css";
+import qps from '../../assets/qps.png'
+import meter from '../../assets/meter.png'
+import strtRegulator from '../../assets/strtRegulator.png'
+import branch from '../../assets/branch.png'
+import consumer from '../../assets/consumer.png'
+import arrow from '../../assets/arrow.png'
+import reducer from '../../assets/reducer.png'
+import valve from '../../assets/valve.png'
+import gb from '../../assets/gb.png'
+import sensor from '../../assets/sensor.png'
+import prs from '../../assets/prs.png'
+import regulator from '../../assets/regulator.png'
+
+
 
 const SIDEBAR_SECTIONS = [
   {
     title: "Measurement",
-    items: ["QPS", "METER", "SENSOR"]
+    items: [
+      { type: "QPS", image: qps },
+      { type: "METER", image: meter },
+      { type: "SENSOR", image: sensor }
+    ]
   },
   {
     title: "Storage",
-    items: ["GB"]
+    items: [
+      { type: "GB", image: gb }
+    ]
   },
   {
     title: "Controllers",
-    items: ["PRS", "ESDV", "REGULATOR", "REDUCER", "STREETREGULATOR", "VALVE"]
+    items: [
+      { type: "PRS", image: prs },
+      // { type: "ESDV", image: "" },
+      { type: "REGULATOR", image: regulator },
+      { type: "REDUCER", image: reducer },
+      { type: "STREETREGULATOR", image: strtRegulator },
+      { type: "VALVE", image: valve },
+      { type: "JOINT", image: branch}
+    ]
   },
   {
     title: "Infrastructure",
-    items: ["PIPE"]
+    items: [
+      // { type: "PIPE", image: arrow }
+      {type: "CONSUMER", image: consumer}
+    ]
+  
+  },
+  {
+    title: "Connection-type",
+    items: [
+      {type: "EDGE", image: arrow}
+    ]
   }
+
 ];
 
 const ObjectListDropdown = ({ addNode, addArrow }) => {
@@ -170,13 +100,22 @@ const ObjectListDropdown = ({ addNode, addArrow }) => {
               openSections[title] ? "open" : ""
             }`}
           >
-            {items.map(type => (
+            {items.map((item) => (
               <div
-                key={type}
+                key={item.type}
                 className="drawsldblock"
-                onClick={() => addNode(type)}
+                onClick={() => {
+                  if(item.type !== "EDGE") addNode(item.type);
+                  else addArrow();
+                }}
+                style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
               >
-                {type}
+                <img
+                  src={item.image}
+                  alt={item.type}
+                  style={{ height: '4vh' }}
+                />
+                {item.type}
               </div>
             ))}
           </div>

@@ -1,16 +1,25 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import './NavBar.css'
 import Esyasoft_Holding from '../../assets/Esyasoft_Holding.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDownload, faFileUpload, faFloppyDisk, faRotateLeft, faRotateRight } from '@fortawesome/free-solid-svg-icons'
 import { ConvertSematicToLayout } from '../Utils/ImportRealJson'
 import Papa from 'papaparse';
-import { LuArrowDownToLine, LuClipboardPen, LuImport, LuRedo, LuUndo, LuZoomIn, LuZoomOut } from "react-icons/lu";
+import { LuArrowDownToLine, LuClipboardPen, LuImport, LuPalette, LuRedo, LuUndo, LuZoomIn, LuZoomOut } from "react-icons/lu";
+import ColorPalette from '../ColorPalette/ColorPalette'
 
 
 
-const NavBar = ({stageRef, onImport}) => {
+const NavBar = ({stageRef, onImport, selected, onEdgeColorChange}) => {
   const fileInputRef = useRef(null);
+  const [showPalette, setShowPalette] = useState(false);
+  const [edgeColor, setEdgeColor] = useState('#000000')
+
+  const handleColor = () =>{
+    if (selected?.type === "edge") {
+    setShowPalette(prev => !prev);
+  }
+  }
 
   const handleRedo = () => {
     redo();
@@ -42,12 +51,6 @@ const NavBar = ({stageRef, onImport}) => {
     fileInputRef.current.click();
   }
 
-
-
-
-
-
-
   // read csv and convert to json {nodes:[], arrows:[]}
   const objectType = {
     1: "QPS",
@@ -62,8 +65,6 @@ const NavBar = ({stageRef, onImport}) => {
     10: "REDUCER"
   }
   
-
-
   const convertTojson = (rows) => {
     const nodes = []
     const arrows = []
@@ -71,11 +72,7 @@ const NavBar = ({stageRef, onImport}) => {
     const adj = {}
     let counter = 0;
     let countArrow = 1;
-    
 
-    // Object.keys(adj).forEach(nodeId => {
-    //   adj[nodeId] = [];
-    // })
     rows.forEach(row => {
       const objType = Number(row.obj_ref_id);
       if(objType !== 9 && objType >= -1){
@@ -110,10 +107,6 @@ const NavBar = ({stageRef, onImport}) => {
         }
       }
     })
-
-    // console.log(adj)
-    // console.log(nodeMap)
-
 
     Object.entries(adj).forEach(([parent, children]) => {
       children.forEach(childId => {
@@ -199,25 +192,41 @@ const NavBar = ({stageRef, onImport}) => {
         <img src={Esyasoft_Holding} alt='Esyasoft_Holding_logo' style={{ width:'5wh', height:'6vh', display:'flex', alignItems:'center'
         }}/>
         <div className='NavbarButtonDiv'>
-        <div className='NavbarIconButton first' >
-          <button className='navbarbutton icons' onClick={handleUndo}><LuUndo style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}} /></button>
-          <button className='navbarbutton icons' onClick={handleRedo}><LuRedo style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}} /></button>
-        </div>
-        <div className='NavbarIconButton second' >
-          <button className='navbarbutton icons' ><LuClipboardPen style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}} /></button>
-          <button className='navbarbutton icons' onClick={handleDownload}><LuArrowDownToLine style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}} /></button>
-          <button className='navbarbutton icons' onClick={handleUploadIconClick}>
-            <LuImport style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}} />
-            <input type='file' ref={fileInputRef} style={{display:'none'}} accept='.csv' onChange={handleFileChange}/>
-            </button>
-        </div>
-        <div className='NavbarIconButton third  '>
-          <div className='zoom-box'>
-            <button className='navbarbutton icons'><LuZoomIn style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}}/></button>
-            <div className='zoom-percent-display'>100%</div>
-            <button className='navbarbutton icons'><LuZoomOut style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}}/></button>
+          <div className='NavbarIconButton first' style={{position:'relative'}}>
+            <button className='navbarbutton icons' onClick={handleColor}><LuPalette style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}}/></button>
+            {showPalette && (
+              <ColorPalette
+                initialColor={edgeColor}
+                onApply={(color) => {
+                  if (selected?.type === "edge") {
+                    onEdgeColorChange(color);
+                  }
+                  setEdgeColor(color);
+                  setShowPalette(false);
+                }}
+                onClose={() => setShowPalette(false)}
+              />
+            )}
           </div>
-        </div>
+          <div className='NavbarIconButton first' >
+            <button className='navbarbutton icons' onClick={handleUndo}><LuUndo style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}} /></button>
+            <button className='navbarbutton icons' onClick={handleRedo}><LuRedo style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}} /></button>
+          </div>
+          <div className='NavbarIconButton second' >
+            <button className='navbarbutton icons' ><LuClipboardPen style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}} /></button>
+            <button className='navbarbutton icons' onClick={handleDownload}><LuArrowDownToLine style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}} /></button>
+            <button className='navbarbutton icons' onClick={handleUploadIconClick}>
+              <LuImport style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}} />
+              <input type='file' ref={fileInputRef} style={{display:'none'}} accept='.csv' onChange={handleFileChange}/>
+              </button>
+          </div>
+          <div className='NavbarIconButton third  '>
+            <div className='zoom-box'>
+              <button className='navbarbutton icons'><LuZoomIn style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}}/></button>
+              <div className='zoom-percent-display'>100%</div>
+              <button className='navbarbutton icons'><LuZoomOut style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}}/></button>
+            </div>
+          </div>
         </div>
     </div>
   )

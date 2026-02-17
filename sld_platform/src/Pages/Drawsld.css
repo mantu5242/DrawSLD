@@ -6,7 +6,7 @@
 }
 
 .project-main-page{
-  /* height: 100vh; */
+  height: 100vh;
   display: flex ;
   height: 100vh;
   flex-direction: column;

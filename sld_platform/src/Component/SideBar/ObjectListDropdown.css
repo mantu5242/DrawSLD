@@ -10,7 +10,6 @@
   gap: 8px;
   font-size: 13px;
   font-weight: 600;
-  /* padding: 10px 0px; */
   cursor: pointer;
   color: #4b5563;
   transition: 0.2s ease;
@@ -22,8 +21,6 @@
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease;
-  /* background-color: rgba(205, 206, 212, 0.269); */
-  /* padding: 12px; */
 }
 
 .sidebar-section-content.open {
@@ -44,8 +41,6 @@
 }
 
 .drawsldblock:hover {
-  /* background: #f5f3f3e2; */
   border: 2px solid #d1d5db;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.21);
-  /* transform: translateY(-2px); */
 }

@@ -22,8 +22,8 @@ const Sidebar = ({ addNode, addArrow, selected, onEdgeColorChange }) => (
     {/* <label className="sidebar-title">Pipes</label>
     <div className="drawsldblock" onClick={addArrow}>
       Arrow
-    </div>
-
+    </div> */}
+{/*
     <label className="sidebar-title">Edge Color</label>
     <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
       {colors.map(color => (

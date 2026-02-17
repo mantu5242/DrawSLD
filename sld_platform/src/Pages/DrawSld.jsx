@@ -65,17 +65,19 @@ const DrawSld = () => {
 
   return (
     <div className="project-main-page">
-      <NavBar stageRef={stageRef} onImport = {handleImport}/>
+      <NavBar stageRef={stageRef} onImport = {handleImport} selected = {selected} 
+        onEdgeColorChange={(color) => {
+              if (selected?.type === "edge") {
+                updateArrowColor(selected.id, color);
+              }
+            }}
+      />
       <div className="drawsldmain">
         <Sidebar 
           addNode={addNode} 
           addArrow={addArrow} 
           selected={selected}
-          onEdgeColorChange={(color) => {
-            if (selected?.type === "edge") {
-              updateArrowColor(selected.id, color);
-            }
-          }}
+          
         />
 
         <SldStage

@@ -15,7 +15,7 @@
 /* Sidebar */
 .sidebar {
   width: 260px;
-  height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   background-image: linear-gradient(white,rgba(224, 224, 225, 0.87));
@@ -45,6 +45,8 @@
 .canvas {
   flex: 1;
   background: #ffffffc9;
+  height: 100%;
+  width: 100%;
 }
 
 .sidebar-midbox{

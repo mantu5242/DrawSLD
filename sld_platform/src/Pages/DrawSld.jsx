@@ -10,11 +10,12 @@ import NavBar from "../Component/NavBar/NavBar";
 
 const DrawSld = () => {
   const [selected, setSelected] = useState({ type: null, id: null });
+  const [editMode, setEditMode] = useState(false);
   const stageRef = useRef(null);
   const [editingLabel, setEditingLabel] = useState(null);
   const [connecting, setConnecting] = useState(null);
   const { nodes, setNodes, addNode, updateNode, resizeNode, removeNode} = UseNodes();
-  const {  arrows, setArrows, addArrow,addArrowFromPorts, updateArrowPort, updateArrowLabel, removeArrow, updateArrowColor, cleanupNodeArrows, syncArrowsWithNode, moveArrow } = useArrow(nodes);
+  const {  arrows, setArrows, addArrow, addArrowFromPorts, updateArrowPort, updateArrowLabel, removeArrow, updateArrowColor, cleanupNodeArrows, syncArrowsWithNode, moveArrow } = useArrow(nodes);
 
   const handleImport = (json) => {
     // const json = JSON.parse(data);
@@ -62,23 +63,25 @@ const DrawSld = () => {
     setEditingLabel(null);
   };
 
-
+  console.log("editing mode",editMode)
   return (
     <div className="project-main-page">
-      <NavBar stageRef={stageRef} onImport = {handleImport} selected = {selected} 
+      <NavBar setEditMode = {setEditMode} stageRef={stageRef} onImport = {handleImport} selected = {selected} 
         onEdgeColorChange={(color) => {
               if (selected?.type === "edge") {
                 updateArrowColor(selected.id, color);
               }
             }}
       />
-      <div className="drawsldmain">
-        <Sidebar 
+
+      
+      <div className="drawsldmain"> 
+        {editMode && <Sidebar 
           addNode={addNode} 
           addArrow={addArrow} 
           selected={selected}
           
-        />
+        />}
 
         <SldStage
           stageRef = {stageRef}

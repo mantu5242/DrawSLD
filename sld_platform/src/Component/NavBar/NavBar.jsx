@@ -1,8 +1,6 @@
 import React, { useRef, useState } from 'react'
 import './NavBar.css'
 import Esyasoft_Holding from '../../assets/Esyasoft_Holding.png'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faDownload, faFileUpload, faFloppyDisk, faRotateLeft, faRotateRight } from '@fortawesome/free-solid-svg-icons'
 import { ConvertSematicToLayout } from '../Utils/ImportRealJson'
 import Papa from 'papaparse';
 import { LuArrowDownToLine, LuClipboardPen, LuImport, LuPalette, LuRedo, LuUndo, LuZoomIn, LuZoomOut } from "react-icons/lu";
@@ -10,7 +8,7 @@ import ColorPalette from '../ColorPalette/ColorPalette'
 
 
 
-const NavBar = ({stageRef, onImport, selected, onEdgeColorChange}) => {
+const NavBar = ({setEditMode ,stageRef, onImport, selected, onEdgeColorChange}) => {
   const fileInputRef = useRef(null);
   const [showPalette, setShowPalette] = useState(false);
   const [edgeColor, setEdgeColor] = useState('#000000')
@@ -19,6 +17,10 @@ const NavBar = ({stageRef, onImport, selected, onEdgeColorChange}) => {
     if (selected?.type === "edge") {
     setShowPalette(prev => !prev);
   }
+  }
+
+  const handleEdit = () => {
+    setEditMode(prev => !prev);
   }
 
   const handleRedo = () => {
@@ -213,7 +215,7 @@ const NavBar = ({stageRef, onImport, selected, onEdgeColorChange}) => {
             <button className='navbarbutton icons' onClick={handleRedo}><LuRedo style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}} /></button>
           </div>
           <div className='NavbarIconButton second' >
-            <button className='navbarbutton icons' ><LuClipboardPen style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}} /></button>
+            <button className='navbarbutton icons' onClick={handleEdit} ><LuClipboardPen style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}} /></button>
             <button className='navbarbutton icons' onClick={handleDownload}><LuArrowDownToLine style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}} /></button>
             <button className='navbarbutton icons' onClick={handleUploadIconClick}>
               <LuImport style={{color:'rgba(0, 0, 0, 0.664) ', height:'5vh', width:'10wh'}} />

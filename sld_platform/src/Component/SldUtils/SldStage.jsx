@@ -107,7 +107,7 @@ const SldStage = ({
       <Stage
         draggable = {!isDraggingNode}
         ref={stageRef}
-        width={window.innerWidth - 260}
+        width={window.innerWidth}
         height={window.innerHeight}
         scaleX={scale}
         scaleY={scale}
@@ -131,7 +131,7 @@ const SldStage = ({
       >
         <Layer listening={false}>
             <GridLayer
-              // width={window.innerWidth - 260}
+              // width={window.innerWidth - 26}
               // height={window.innerHeight}
               width={width}
               height={height}

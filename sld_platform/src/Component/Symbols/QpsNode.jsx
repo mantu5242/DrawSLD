@@ -62,14 +62,48 @@
 
 // export default QpsNode;
 
+// import { Text } from "react-konva";
+// import BaseNode from "./BaseNode";
+
+// const QpsNode = (props) => {
+//   const { node } = props;
+
+//   return (
+//     <BaseNode {...props}>
+//       <Text
+//         text="QPS"
+//         width={node.width}
+//         height={node.height}
+//         align="center"
+//         verticalAlign="middle"
+//       />
+//     </BaseNode>
+//   );
+// };
+
+// export default QpsNode;
+
+
 import { Text } from "react-konva";
 import BaseNode from "./BaseNode";
 
-const QpsNode = (props) => {
-  const { node } = props;
-
+const QpsNode = ({
+  node,
+  onDrag,
+  onResize,
+  setIsDraggingNode,
+  onStartConnect,
+  onFinishConnect
+}) => {
   return (
-    <BaseNode {...props}>
+    <BaseNode
+      node={node}
+      onDrag={onDrag}
+      onResize={onResize}
+      setIsDraggingNode={setIsDraggingNode}
+      onStartConnect={onStartConnect}
+      onFinishConnect={onFinishConnect}
+    >
       <Text
         text="QPS"
         width={node.width}

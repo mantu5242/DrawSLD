@@ -42,11 +42,11 @@ export function ConvertSematicToLayout(input){
         indeg.set(u,indeg.get(u)+1);
     });
 
-    console.log("adjency list = ",adj)
+    // console.log("adjency list = ",adj)
     // find root of the graph
-    console.log("indegree - ", indeg)
+    // console.log("indegree - ", indeg)
     const roots = nodes.filter(n => indeg.get(n.id) === 0).map(n => n.id)
-    console.log("rootNode - ",roots);
+    // console.log("rootNode - ",roots);
 
     // BFS Layering
     const layer = new Map()
@@ -55,7 +55,7 @@ export function ConvertSematicToLayout(input){
         q.push(r)
     })
 
-    console.log("queue",q);
+    // console.log("queue",q);
 
     while(q.length){
         const u = q.shift();
@@ -88,7 +88,7 @@ export function ConvertSematicToLayout(input){
         layers[l].push(id)
     })
 
-    console.log("Layers - ",layers)
+    // console.log("Layers - ",layers)
     const H_GAP = 200
     const V_GAP = 120
     const START_X = 100
@@ -97,13 +97,13 @@ export function ConvertSematicToLayout(input){
     Object.entries(layers).forEach(([l, ids]) => {
         // console.log("l - ",l,"ids ",ids)
         let y = START_Y - ((ids.length - 1) * V_GAP) / 2
-        console.log("y",y);
+        // console.log("y",y);
         ids.forEach(id => {
             const n = nodeMap[id]
             n.x = START_X + l * H_GAP;
             n.y = y
             y += V_GAP
-            console.log("coordinates ",n.x,n.y)
+            // console.log("coordinates ",n.x,n.y)
         })
     })
 
@@ -147,7 +147,7 @@ export function ConvertSematicToLayout(input){
         a.label.y = y;
         a.label.visible = true;
     })
-    console.log({nodes, arrows})
+    // console.log({nodes, arrows})
     return { nodes, arrows }
 }
 

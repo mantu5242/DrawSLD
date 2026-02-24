@@ -3,14 +3,14 @@ import { createSlice } from "@reduxjs/toolkit";
 const uiSlice = createSlice({
   name: "ui",
   initialState: {
-    sidebarOpen: true
+    mode: "edit",
   },
   reducers: {
-    toggleSidebar(state) {
-      state.sidebarOpen = !state.sidebarOpen;
+    setMode(state, action) {
+      state.mode = action.payload;
     }
   }
 });
 
-export const { toggleSidebar } = uiSlice.actions;
+export const { setMode } = uiSlice.actions;
 export default uiSlice.reducer;

@@ -63,16 +63,51 @@
 // export default EsdvNode;
 
 
+// import { Text } from "react-konva";
+// import BaseNode from "./BaseNode";
+
+// const EsdvNode = (props) => {
+//   const { node } = props;
+
+//   return (
+//     <BaseNode {...props}>
+//       <Text
+//         text="ESDV"
+//         width={node.width}
+//         height={node.height}
+//         align="center"
+//         verticalAlign="middle"
+//       />
+//     </BaseNode>
+//   );
+// };
+
+// export default EsdvNode;
+
+
+
 import { Text } from "react-konva";
 import BaseNode from "./BaseNode";
 
-const EsdvNode = (props) => {
-  const { node } = props;
-
+const EsdvNode = ({
+  node,
+  onDrag,
+  onResize,
+  setIsDraggingNode,
+  onStartConnect,
+  onFinishConnect
+}) => {
   return (
-    <BaseNode {...props}>
+    <BaseNode
+      node={node}
+      onDrag={onDrag}
+      onResize={onResize}
+      setIsDraggingNode={setIsDraggingNode}
+      onStartConnect={onStartConnect}
+      onFinishConnect={onFinishConnect}
+    >
       <Text
-        text="ESDV"
+        text="PRS"
         width={node.width}
         height={node.height}
         align="center"

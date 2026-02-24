@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { LuChevronDown, LuChevronRight } from "react-icons/lu";
+import { useDispatch, useSelector } from "react-redux";
+import { addArrow, addNode } from "../../Redux/DiagramSlice";
 import "./ObjectListDropdown.css";
 import qps from '../../assets/qps.png'
 import meter from '../../assets/meter.png'
@@ -54,13 +56,15 @@ const SIDEBAR_SECTIONS = [
   {
     title: "Connection-type",
     items: [
-      {type: "EDGE", image: arrow}
+      {type: "edge", image: arrow}
     ]
   }
 
 ];
 
-const ObjectListDropdown = ({ addNode, addArrow }) => {
+const ObjectListDropdown = () => {
+
+  const dispatch = useDispatch()
 
   const [openSections, setOpenSections] = useState(() =>
     SIDEBAR_SECTIONS.reduce((acc, section) => {
@@ -105,8 +109,9 @@ const ObjectListDropdown = ({ addNode, addArrow }) => {
                 key={item.type}
                 className="drawsldblock"
                 onClick={() => {
-                  if(item.type !== "EDGE") addNode(item.type);
-                  else addArrow();
+                  if(item.type !== "edge"){ 
+                    dispatch(addNode({type: item.type}));}
+                  else dispatch(addArrow());
                 }}
                 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
               >

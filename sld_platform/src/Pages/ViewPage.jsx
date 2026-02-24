@@ -1,19 +1,18 @@
-import React from 'react'
-import GridLayer from '../Component/Utils/GridLayer'
+import { useEffect } from 'react';
+import SldStage from '../Component/SldUtils/SldStage'
+import { setMode } from '../Redux/UiSlice'
+import { useDispatch } from 'react-redux'
 
-const width = window.innerWidth
-const height = window.innerHeight
-const scale = 1
-const stagePos = {x:0, y:0}
-
-const ViewPage = () => {
+const ViewPage = ({scale, setScale, stageRef}) => {
+  const dispatch = useDispatch();
+  useEffect( () => {
+    dispatch(setMode('view'));
+    return () => {
+      dispatch(setMode('edit'));
+    }
+  },[dispatch])
   return (
-    <GridLayer  
-    width={width}
-    height={height}
-    scale={scale}
-    stagePos={stagePos}
-    />
+    <SldStage scale={scale} setScale={setScale} stageRef={stageRef}/>
   )
 }
 

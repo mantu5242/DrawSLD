@@ -58,10 +58,14 @@
 .first{
     border-color: rgba(117, 117, 117, 0.224);
     border-left-width: 1.5px;
+    padding-bottom: 3px;
+    padding-top: 3px;
 }
 .second{
     border-color: rgba(117, 117, 117, 0.224);
     border-left-width: 1.5px;
+    padding-bottom: 3px;
+    padding-top: 3px;
 }
 .third{
     border-color: rgba(117, 117, 117, 0.224);

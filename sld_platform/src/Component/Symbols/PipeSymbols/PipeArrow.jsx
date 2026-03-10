@@ -43,42 +43,6 @@
       return () => anim.stop();
     }, []);
 
-  // compute screen position before calling editor
-    // const stage = lineRef.current?.getStage();
-    // if(stage && labelPos){
-    //   arrow.labelScreenPos = stage.getAbsoluteTransform().point(labelPos)
-    // }
-
-
-
-    // for making the text area editable
-
-    // const startLabelEditing = (e) => {
-    //   e.cancelBubble = true;
-    //   const stage = e.target.getStage();
-    //   const base = getPointAtT(points, arrow.label.t);
-    //   const labelPos = {
-    //     x: base.x + (arrow.label.offset?.x || 0),
-    //     y: base.y + (arrow.label.offset?.y || 0)
-    //   };
-
-    //   const labelScreenPos =
-    //     stage.getAbsoluteTransform().point(labelPos);
-
-    //   arrow.label.visible = true;
-
-    //   setEditingLabel({
-    //     arrowId: arrow.id,
-    //     label: arrow.label,
-    //     labelScreenPos
-    //   });
-    // };
-
-
-
-    // ........................................... //
-    // ........................................... //
-
     const startLabelEditing = (e) => {
     e.cancelBubble = true;
 
@@ -94,7 +58,6 @@
     const labelScreenPos =
       stage.getAbsoluteTransform().point(labelPos);
 
-    // If you want label visibility controlled by Redux:
     dispatch(setArrowLabelVisible({
       arrowId: arrow.id,
       visible: true
@@ -108,14 +71,8 @@
     });
   };
 
-    // ............................................ //
-    // ............................................ //
-
-
-
     return (
       <>
-        {/* ---------- ARROW ---------- */}
         <Arrow
           points={points}
           stroke={arrow.stroke || "black"}
@@ -125,7 +82,6 @@
           pointerWidth={8}
           ref={lineRef}
           dash={[20, 10]}
-          // onMouseDown={(e) => { e.cancelBubble = true; onSelect(arrow.id); }}
           onMouseDown={(e) => {e.cancelBubble = true; dispatch(setSelected({type:"edge", id: arrow.id}))}}  // redux .....
           onMouseEnter={(e) => e.target.getStage().container().style.cursor = 'move'}
           onMouseLeave={(e) => e.target.getStage().container().style.cursor = 'default'}

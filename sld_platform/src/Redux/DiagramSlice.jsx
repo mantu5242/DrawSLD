@@ -32,18 +32,10 @@ const diagramSlice = createSlice({
   initialState,
   reducers: {
 
-    /* =========================
-       DIAGRAM LOAD / RESET
-    ========================== */
-
     setDiagram(state, action) {
       state.nodes = action.payload.nodes || [];
       state.arrows = action.payload.arrows || [];
     },
-
-    /* =========================
-       NODE ACTIONS
-    ========================== */
 
     addNode(state, action) {
       // console.log(action.payload)
@@ -57,8 +49,6 @@ const diagramSlice = createSlice({
         ...config,
         readings
       });
-      
-
     },
 
     updateNode(state, action) {
@@ -114,9 +104,7 @@ const diagramSlice = createSlice({
       );
     },
 
-    /* =========================
-       ARROW ACTIONS
-    ========================== */
+
 
     addArrow(state) {
       state.arrows.push({
@@ -242,9 +230,6 @@ const diagramSlice = createSlice({
     if (arrow) arrow.label.offset = offset;
     },  
 
-    /* =========================
-       BULK SETTERS
-    ========================== */
 
     setNodes(state, action) {
       state.nodes = action.payload;
@@ -265,7 +250,6 @@ export const {
   updateNode,
   resizeNode,
   removeNode,
-
   addArrow,
   addArrowFromPorts,
   updateArrowPort,

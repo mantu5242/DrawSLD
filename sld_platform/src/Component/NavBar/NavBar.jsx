@@ -3,7 +3,7 @@ import './NavBar.css'
 import Esyasoft_Holding from '../../assets/Esyasoft_Holding.png'
 import { ConvertSematicToLayout } from '../Utils/ImportRealJson'
 import Papa from 'papaparse';
-import { LuArrowDownToLine, LuClipboardPen, LuImport, LuPalette, LuRedo, LuShare, LuShare2, LuUndo, LuZoomIn, LuZoomOut } from "react-icons/lu";
+import { LuArrowDownToLine, LuClipboardPen, LuImport, LuPalette, LuRedo, LuShare2, LuUndo, LuZoomIn, LuZoomOut } from "react-icons/lu";
 import ColorPalette from '../ColorPalette/ColorPalette'
 import { useDispatch, useSelector } from 'react-redux';
 import { setMode } from '../../Redux/UiSlice';
@@ -80,20 +80,6 @@ const NavBar = ({scale, setScale}) => {
   const handleUploadIconClick = () => {
     fileInputRef.current.click();
   }
-
-  // const objectType = {
-  //   1: "QPS",
-  //   2: "OUTLETPIPE",
-  //   3: "METER",
-  //   4: "GB",
-  //   5: "JOINT",
-  //   6: "STREETREGULATOR",
-  //   7: "REGULATOR",
-  //   8: "CONSUMER",
-  //   9: "FILLER",
-  //   10: "REDUCER"
-  // }
-  
   const convertTojson = (rows) => {
     return convertJson(rows);
   }

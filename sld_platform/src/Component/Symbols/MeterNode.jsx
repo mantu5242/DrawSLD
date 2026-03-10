@@ -1,27 +1,3 @@
-// import { Text } from "react-konva";
-// import BaseNode from "./BaseNode";
-
-// const MeterNode = (props) => {
-//   const { node } = props;
-
-//   return (
-//     <BaseNode {...props}>
-//       <Text
-//         text="Meter"
-//         width={node.width}
-//         height={node.height}
-//         align="center"
-//         verticalAlign="middle"
-//       />
-//     </BaseNode>
-//   );
-// };
-
-// export default MeterNode;
-
-
-
-
 import { Text } from "react-konva";
 import BaseNode from "./BaseNode";
 
@@ -51,7 +27,6 @@ const MeterNode = ({
         fontStyle="bold"
       />
 
-      {/* Temperature */}
       <Text
         text={`Temp: ${temperature ?? 0}`}
         width={node.width}
@@ -60,7 +35,6 @@ const MeterNode = ({
         fontSize={7}
       />
 
-      {/* Pressure */}
       <Text
         text={`Pressure: ${pressure ?? 0}`}
         width={node.width}
@@ -69,7 +43,6 @@ const MeterNode = ({
         fontSize={7}
       />
 
-      {/* Volume */}
       <Text
         text={`Volume: ${volume ?? 0}`}
         width={node.width}

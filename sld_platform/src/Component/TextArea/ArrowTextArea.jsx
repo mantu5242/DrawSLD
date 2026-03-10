@@ -2,12 +2,6 @@ import React, { useRef, useState } from 'react'
 
 const ArrowTextArea = ({editingLabel, setEditingLabel, commitLabelChange, stageRef}) => {
     if(!editingLabel || !stageRef.current) return null;
-
-    // const stageRect = stageRef.current
-    //     .cotainer()      // this return actual dom element where Konva render the canvas
-    //     .getBoundingClientRect()  // it return the position and size of the element relative to the viewport
-
-
     return (
         <textarea
             autoFocus

@@ -31,7 +31,6 @@ const NodeDataCard = ({scale, stagePos}) => {
   const top = screenY - 170;
 
   return (
-    // <div className="card-overlay">
       <div className="node-card"
         style={{
         position: "absolute",
@@ -41,7 +40,6 @@ const NodeDataCard = ({scale, stagePos}) => {
       }}
       >
         
-        {/* Header */}
         <div className="card-header">
           <h2>{node.type}</h2> 
           <FiX className="close-icon"  onClick={() => dispatch(clearSelected())}/>
@@ -79,7 +77,7 @@ const NodeDataCard = ({scale, stagePos}) => {
         </div>
 
       </div>
-    // </div>
+
   )
 }
 

@@ -7,7 +7,6 @@ const BranchNode3 = (props) => {
   return (
     <BaseNode {...props}>
       <Text
-        // text="Branch"
         width={node.width}
         height={node.height}
         align="center"

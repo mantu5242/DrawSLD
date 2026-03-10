@@ -11,16 +11,10 @@ const ResizeHandle = ({ x, y,cursor, size = 8, onDragEnd }) => {
       stroke="blue"
       strokeWidth={2}
       draggable
-    //   onDragMove={onDragMove}
       onDragEnd={onDragEnd}
-    //   dragBoundFunc={(pos) => pos} // allow free drag
     onMouseEnter={(e) => {
     e.target.getStage().container().style.cursor = cursor;
     }}
-
-    // onMouseEnter={(e) => {
-    // e.target.getStage().container().style.cursor = "nwse-resize";
-    // }}
 
     onMouseLeave={(e) => {
         e.target.getStage().container().style.cursor = "default";

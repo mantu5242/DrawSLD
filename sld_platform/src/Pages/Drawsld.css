@@ -1,5 +1,5 @@
 #drawsldmain{
-  flex: 1;                 /* Takes remaining space */
+  flex: 1;                
   display: flex;
   overflow: hidden; 
   height: 100%;

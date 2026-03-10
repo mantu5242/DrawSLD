@@ -1,4 +1,3 @@
-
 import { Text } from "react-konva";
 import BaseNode from "./BaseNode";
 

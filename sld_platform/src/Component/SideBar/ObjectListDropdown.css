@@ -3,7 +3,7 @@
   padding: 12px;
 }
 
-/* Header */
+
 .sidebar-section-header {
   display: flex;
   align-items: center;
@@ -16,7 +16,7 @@
   padding: 4px 4px;
 }
 
-/* Dropdown content animation */
+
 .sidebar-section-content {
   max-height: 0;
   overflow: hidden;
@@ -24,10 +24,10 @@
 }
 
 .sidebar-section-content.open {
-  max-height: 1000px; /* large enough */
+  max-height: 1000px;
 }
 
-/* Component blocks */
+
 .drawsldblock {
   background: #ffffff;
   padding: 12px;

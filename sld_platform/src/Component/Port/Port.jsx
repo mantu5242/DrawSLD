@@ -1,6 +1,4 @@
-// Component/Port/Port.jsx
 import { Circle } from "react-konva";
-import { getWorldPointer } from "../Utils/World";
 
 const Port = ({ x, y, nodeId, side, radius = 4, visible = true, onStartConnect, onFinishConnect }) => {
   // console.log("Node id - ", nodeId)
@@ -17,13 +15,10 @@ const Port = ({ x, y, nodeId, side, radius = 4, visible = true, onStartConnect, 
       onMouseLeave={(e) => {e.cancelBubble = true; e.target.getStage().container().style.cursor = 'default';}}
       onMouseDown={(e) => {
         e.cancelBubble = true; 
-        // const stage = e.target.getStage();
-        // const pos = getWorldPointer(stage);
-        // onStartConnect(nodeId ,side,pos);
         const stage = e.target.getStage();
         const port = e.target;
 
-        // ✅ convert port position → world space
+        // convert port position → world space
         const transform = stage.getAbsoluteTransform().copy();
         transform.invert();
 

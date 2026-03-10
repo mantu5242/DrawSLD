@@ -4,15 +4,36 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import DrawSld from './Pages/DrawSld'
 import NavBar from './Component/NavBar/NavBar';
 import ViewPage from './Pages/ViewPage';
-import {useState, useRef} from 'react'
+import {useState, useRef, useEffect} from 'react'
+import NodeDataCard from './Component/Cards/NodeDataCard';
+import { useDispatch } from 'react-redux';
+import { setDiagram } from './Redux/DiagramSlice';
 function App() {
   const [scale, setScale] = useState(1);
   const stageRef = useRef(null)
+  const dispatch = useDispatch();
+
+
+  useEffect(() => {
+  const saved = localStorage.getItem("sld-project");
+
+  if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        dispatch(setDiagram(parsed));
+      } catch (err) {
+        console.error("Load error", err);
+      }
+    }
+}, [dispatch]);
+
+
   return (
    <BrowserRouter>
     <div className='Main-Layout'>
       <NavBar scale = {scale} setScale = {setScale}  />
       <Routes>
+        {/* <Route path='/' element = {<NodeDataCard/>} /> */}
         <Route path='/' element = { <DrawSld scale = {scale} setScale = {setScale} stageRef={stageRef} /> }/>   
         <Route path='/view' element = { <ViewPage scale = {scale} setScale = {setScale}  stageRef = {stageRef}/> }/>    
       </Routes>

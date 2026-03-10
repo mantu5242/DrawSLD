@@ -219,6 +219,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateNode, resizeNode, updateArrowPort, removeArrow } from "../../Redux/DiagramSlice";
 import { setSelected } from "../../Redux/SelectionSlice";
 import { useArrow } from "../Hooks/UseArrow";
+import NodeDataCard from "../Cards/NodeDataCard"
 
 const SCALE_BY = 1.05;
 
@@ -229,6 +230,8 @@ const SldStage = ({scale, setScale,  stageRef, setEditingLabel }) => {
   const nodes = useSelector(state => state.history.present.nodes);
   const arrows = useSelector(state => state.history.present.arrows);
   const selected = useSelector(state => state.selection);
+  const isReadOnly = useSelector(state => state.ui.mode);
+  // console.log(selected)
 
   const trRef = useRef();
   const shapeRefs = useRef({});
@@ -250,10 +253,9 @@ const SldStage = ({scale, setScale,  stageRef, setEditingLabel }) => {
 
   const handleWheel = (e) => {
     e.evt.preventDefault();
-
     const stage = e.target.getStage();
     const pointer = stage.getPointerPosition();
-    if (!pointer) return;
+    if (!pointer)  return;
 
     const oldScale = scale;
 
@@ -319,7 +321,7 @@ const SldStage = ({scale, setScale,  stageRef, setEditingLabel }) => {
         scaleY={scale}
         x={stagePos.x}
         y={stagePos.y}
-        onWheel={handleWheel}
+        onWheel={ handleWheel}
         onDragEnd={handleStageDragEnd}
         onMouseDown={(e) => {
           if (e.target === e.target.getStage()) {
@@ -396,10 +398,11 @@ const SldStage = ({scale, setScale,  stageRef, setEditingLabel }) => {
                   ? oldBox
                   : newBox
               }
-            />
+            />  
           )}
         </Layer>
       </Stage>
+      <NodeDataCard scale={scale} stagePos = {stagePos}/>
     </div>
   );
 };

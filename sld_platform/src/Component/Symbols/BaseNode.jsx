@@ -135,9 +135,9 @@
 import { Group, Rect } from "react-konva";
 import Port from "../Port/Port";
 import ResizeHandle from "../Port/ResizeHandle";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setSelected } from "../../Redux/SelectionSlice"; 
+import { clearSelected, setSelected } from "../../Redux/SelectionSlice"; 
 
 const MIN_SIZE = 40;
 
@@ -155,9 +155,9 @@ const BaseNode = ({
   const selected = useSelector((state) => state.selection);
   const mode = useSelector(state => state.ui.mode)
   const isReadOnly = mode === 'view'
-
+  
   const [hovered, setHovered] = useState(false);
-
+  const hoverTimeout = useRef(null);
   const isSelected =
     selected?.type === "node" && selected?.id === node.id;
 
@@ -165,6 +165,19 @@ const BaseNode = ({
   const nodeId = node.id;
 
   // 8 resize handles
+  useEffect(() => {
+    if (!isReadOnly) return;
+    if (
+    selected?.type === "node" &&
+    selected?.id === node.id &&
+    selected?.pinned === false &&
+    hovered === false
+  ) {
+    dispatch(clearSelected());
+  }
+}, [hovered, selected, isReadOnly, node.id, dispatch]);
+
+
   const handles = [
     { x: 0, y: 0, cursor: "nw-resize" },
     { x: node.width / 2, y: 0, cursor: "n-resize" },
@@ -228,6 +241,7 @@ const BaseNode = ({
     onResize(node.id, newX, newY, newWidth, newHeight);
   };
 
+
   return (
     <Group
       x={node.x}
@@ -244,12 +258,78 @@ const BaseNode = ({
       onDragMove={(e) =>
         onDrag(node.id, e.target.x(), e.target.y())
       }
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onMouseDown={(e) => {
-        e.cancelBubble = true;
-        dispatch(setSelected({ type: "node", id: node.id }));
-      }}
+      // onMouseEnter={() => {
+      //   setHovered(true);
+      //   if (isReadOnly && !isSelected) {
+      //     hoverTimeout.current = setTimeout(() => {
+      //       dispatch(setSelected({ type: "node", id: node.id }));
+      //     }, 500); // ⏳ delay
+      //   }
+
+      // }}
+      // onMouseLeave={() => {
+      //   setHovered(false);
+      //   if (hoverTimeout.current) {
+      //     clearTimeout(hoverTimeout.current);
+      //     hoverTimeout.current = null;
+      //   }
+      // }}
+      // onMouseDown={(e) => {
+      //   // if(isReadOnly) return;
+      //   e.cancelBubble = true;
+      //   if (isReadOnly) {
+      //     dispatch(setSelected({ type: "node", id: node.id }));
+      //     return;
+      //   }
+      //   dispatch(setSelected({ type: "node", id: node.id }));
+      // }}
+        onMouseEnter={() => {
+          setHovered(true);
+
+          if (isReadOnly && !isSelected) {
+            hoverTimeout.current = setTimeout(() => {
+              dispatch(
+                setSelected({
+                  type: "node",
+                  id: node.id,
+                  pinned: false 
+                })
+              );
+            }, 300);
+          }
+        }}
+
+        onMouseLeave={() => {
+          setHovered(false);
+
+          if (hoverTimeout.current) {
+            clearTimeout(hoverTimeout.current);
+            hoverTimeout.current = null;
+          }
+
+          // 👇 close only if opened by hover
+          // if (
+          //   isReadOnly &&
+          //   selected?.type === "node" &&
+          //   selected?.id === node.id &&
+          //   !selected?.pinned
+          // ) {
+          //   dispatch(clearSelected());
+          // }
+        }}
+
+        onMouseDown={(e) => {
+          e.cancelBubble = true;
+
+          dispatch(
+            setSelected({
+              type: "node",
+              id: node.id,
+              pinned: true 
+            })
+          );
+        }}
+    //  onClick={isReadOnly && handleClick()}
     >
       <Rect
         width={node.width}
@@ -268,7 +348,7 @@ const BaseNode = ({
         y={node.height / 2}
         nodeId={nodeId}
         side="left"
-        visible={showPorts}
+        visible={!isReadOnly && showPorts}
         onStartConnect={onStartConnect}
         onFinishConnect={onFinishConnect}
       />
@@ -278,7 +358,7 @@ const BaseNode = ({
         y={node.height / 2}
         nodeId={nodeId}
         side="right"
-        visible={showPorts}
+        visible={!isReadOnly && showPorts}
         onStartConnect={onStartConnect}
         onFinishConnect={onFinishConnect}
       />
@@ -288,7 +368,7 @@ const BaseNode = ({
         x={node.width / 2}
         nodeId={nodeId}
         side="top"
-        visible={showPorts}
+        visible={!isReadOnly && showPorts}
         onStartConnect={onStartConnect}
         onFinishConnect={onFinishConnect}
       />
@@ -298,13 +378,16 @@ const BaseNode = ({
         x={node.width / 2}
         nodeId={nodeId}
         side="bottom"
-        visible={showPorts}
+        visible={!isReadOnly && showPorts}
         onStartConnect={onStartConnect}
         onFinishConnect={onFinishConnect}
       />
 
+      {/* view + selected = 0 */}
+      {/* edit + selected = 1 */}
+
       {/* Resize Handles */}
-      {isSelected &&
+      {mode === "edit" && isSelected &&
         handles.map((h, i) => (
           <ResizeHandle
             key={i}

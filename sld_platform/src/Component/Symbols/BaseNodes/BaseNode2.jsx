@@ -309,7 +309,7 @@ const BaseNode2 = ({
         y={node.height / 2}
         nodeId={nodeId}
         side="left"
-        visible={showPorts}
+        visible={!isReadOnly && showPorts}
         onStartConnect={onStartConnect}
         onFinishConnect={onFinishConnect}
       />
@@ -319,7 +319,7 @@ const BaseNode2 = ({
         y={node.height / 2}
         nodeId={nodeId}
         side="right"
-        visible={showPorts}
+        visible={!isReadOnly && showPorts}
         onStartConnect={onStartConnect}
         onFinishConnect={onFinishConnect}
       />
@@ -329,7 +329,7 @@ const BaseNode2 = ({
         y={0}
         nodeId={nodeId}
         side="top"
-        visible={showPorts}
+        visible={!isReadOnly && showPorts}
         onStartConnect={onStartConnect}
         onFinishConnect={onFinishConnect}
       />
@@ -339,7 +339,7 @@ const BaseNode2 = ({
         y={node.height}
         nodeId={nodeId}
         side="bottom"
-        visible={showPorts}
+        visible={!isReadOnly && showPorts}
         onStartConnect={onStartConnect}
         onFinishConnect={onFinishConnect}
       />

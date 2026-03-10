@@ -86,6 +86,8 @@ import RegulatorNode from "../Symbols/RegulatorNode";
 import StreetRegulatorNode from "../Symbols/StreetRegulatorNode";
 import MeterNode from "../Symbols/MeterNode";
 import JointNode from "../Symbols/JointNode";
+import PressureNode from "../Symbols/PressureSensor";
+import TemperatureSensor from "../Symbols/TemperatureSensor";
 
 const NODE_MAP = {
   PRS: PrsNode,
@@ -100,7 +102,9 @@ const NODE_MAP = {
   REDUCER: ReducerNode,
   REGULATOR: RegulatorNode,
   METER: MeterNode,
-  GB: GbNode
+  GB: GbNode,
+  PRESSURESENSOR: PressureNode,
+  TEMPERATURESENSOR: TemperatureSensor
 };
 
 const NodesRenderer = ({

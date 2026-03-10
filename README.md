@@ -89,3 +89,23 @@ Pattern -> state-driven pattern
     as it is represent the single connection edge(high level view -> sld diagram)
 
 3. 
+
+
+
+
+
+
+
+
+
+
+
+
+Mapper_data - {
+    id, obj_ref_id, qps_ref_id, parent_id
+}
+
+Object_type - {
+    id, name, obj_ref_id
+}
+

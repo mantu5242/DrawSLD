@@ -33,6 +33,7 @@ const MeterNode = ({
   onStartConnect,
   onFinishConnect
 }) => {
+  const { temperature, pressure, volume } = node.readings || {};
   return (
     <BaseNode
       node={node}
@@ -45,9 +46,36 @@ const MeterNode = ({
       <Text
         text="Meter"
         width={node.width}
-        height={node.height}
         align="center"
-        verticalAlign="middle"
+        y={5}
+        fontStyle="bold"
+      />
+
+      {/* Temperature */}
+      <Text
+        text={`Temp: ${temperature ?? 0}`}
+        width={node.width}
+        align="center"
+        y={20}
+        fontSize={7}
+      />
+
+      {/* Pressure */}
+      <Text
+        text={`Pressure: ${pressure ?? 0}`}
+        width={node.width}
+        align="center"
+        y={27}
+        fontSize={7}
+      />
+
+      {/* Volume */}
+      <Text
+        text={`Volume: ${volume ?? 0}`}
+        width={node.width}
+        align="center"
+        y={34}
+        fontSize={7}
       />
     </BaseNode>
   );

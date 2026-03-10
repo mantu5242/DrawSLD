@@ -11,6 +11,7 @@ import { setDiagram } from '../../Redux/DiagramSlice';
 import { updateArrowColor } from '../../Redux/DiagramSlice';
 import { useNavigate } from 'react-router-dom';
 import { ActionCreators  } from 'redux-undo';
+import { convertJson } from '../Utils/FileHandling';
 
 const SCALE_BY = 1.05;
 
@@ -56,124 +57,49 @@ const NavBar = ({scale, setScale}) => {
 
 
   const handleDownload = () => {
-    const project = localStorage.getItem("sld-project");
-    if(!project) return;
-    try{
-      const parseData = JSON.parse(project);
-      const jsonString = JSON.stringify(parseData,null,2);
-      const blob =  new Blob([jsonString],{type:'application/json'});
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = 'sld-diagram.json';
-      document.body.appendChild(link);
-      link.click()
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    }
-    catch(error){
-      console.error('download error', error)
-    }
-  }
+  const project = localStorage.getItem("sld-project");
+  if (!project) return;
+
+  const blob = new Blob([project], { type: "application/json" });
+
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "sld-diagram.json";
+
+  document.body.appendChild(link);
+  link.click();
+
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+};
+
+
+
   const handleUploadIconClick = () => {
     fileInputRef.current.click();
   }
 
-  const objectType = {
-    1: "QPS",
-    2: "OUTLETPIPE",
-    3: "METER",
-    4: "GB",
-    5: "JOINT",
-    6: "STREETREGULATOR",
-    7: "REGULATOR",
-    8: "CONSUMER",
-    9: "FILLER",
-    10: "REDUCER"
-  }
+  // const objectType = {
+  //   1: "QPS",
+  //   2: "OUTLETPIPE",
+  //   3: "METER",
+  //   4: "GB",
+  //   5: "JOINT",
+  //   6: "STREETREGULATOR",
+  //   7: "REGULATOR",
+  //   8: "CONSUMER",
+  //   9: "FILLER",
+  //   10: "REDUCER"
+  // }
   
   const convertTojson = (rows) => {
-    const nodes = []
-    const arrows = []
-    const nodeMap = {}
-    const adj = {}
-    let counter = 0;
-    let countArrow = 1;
-
-    rows.forEach(row => {
-      const objType = Number(row.obj_ref_id);
-      if(objType !== 9 && objType >= -1){
-        const nodeId = 'n' + row.id;
-        const node = {
-          id: nodeId,
-          type: objectType[objType] || "unknown",
-          x : 0,
-          y : 0,
-          width: 0,
-          height: 0,
-        };
-
-        nodes.push(node);
-        nodeMap[nodeId] = node;
-        adj[nodeId] = [];
-      }
-    })
- 
-
-    rows.forEach(row => {
-      // console.log(row)
-      const objType = Number(row.obj_ref_id)
-      if(objType !== 9){
-        const parentId = "n" + row.parent_id;
-        const childId = "n" + row.id;
-        // console.log(parentId)
-        if(adj[parentId] && nodeMap[childId]){
-          adj[parentId].push(childId);
-        }
-      }
-    })
-
-    Object.entries(adj).forEach(([parent, children]) => {
-      children.forEach(childId => {
-        if(!nodeMap[parent] || !nodeMap[childId] ) return ;
-        arrows.push({
-          id: "a" + countArrow,
-          start: {
-            x : 0,
-            y : 0,
-            attachedTo: {
-              nodeId : parent,
-              side : "",
-              index : 0
-            }
-          },
-          end: {
-            x : 0,
-            y : 0, 
-            attachedTo : {
-              nodeId : childId,
-              side: "",
-              index: 0
-            }
-          },
-          stroke: "#000",
-          label: {
-            text: "",
-            t: 0.5,
-            offset: { x: 0, y: 0 },
-            visible: false,
-            editing: false
-          } 
-        })
-        countArrow++;
-      })
-    })
-
-    return {nodes, arrows}
+    return convertJson(rows);
   }
 
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e) => { 
     const file = e.target.files[0];
 
     // .csv
@@ -218,6 +144,7 @@ const NavBar = ({scale, setScale}) => {
     const reader =  new FileReader();
     reader.onload = (event) => {
       const content = event.target.result;
+      // console.log(content)
 
       if(file.name.endsWith(".json")){
         const parseData = JSON.parse(content);
@@ -231,11 +158,11 @@ const NavBar = ({scale, setScale}) => {
         complete : (result) => {
           const rows = result.data;
           const realData = convertTojson(rows);
-          // console.log(realData);
+          console.log(realData);
           // const parseData = JSON.parse(realData);
           const realDataJson =  ConvertSematicToLayout(realData);
           dispatch(setDiagram(realDataJson));
-          dispatch(setMode("view"));
+          // dispatch(setMode("view"));
           navigate('/view')
           // dispatch(setMode("view"));
         }

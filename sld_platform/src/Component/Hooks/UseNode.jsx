@@ -104,7 +104,7 @@ export const useNodes = () => {
     REGULATOR: { width: 60, height: 30 },
     STREETREGULATOR: { width: 60, height: 30 },
     REDUCER: { width: 60, height: 30 },
-    METER: { width: 60, height: 30 },
+    METER: { width: 60, height: 45 },
     GB: { width: 60, height: 30 },
     BRANCH: { width: 30, height: 30 },
     VALVE: { width: 60, height: 30 },
@@ -125,7 +125,12 @@ export const useNodes = () => {
         type,
         x: 200,
         y: 100,
-        config
+        config,
+        readings: {
+        temperature: 72,
+        pressure: 14.7,
+        volume: 250,
+      }
       })
     );
   };

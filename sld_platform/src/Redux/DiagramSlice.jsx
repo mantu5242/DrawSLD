@@ -1,6 +1,7 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit";
 import { getSnapPoint } from '../Component/Utils/RectSnap'
 import { getCircleSnapPoint } from '../Component/Utils/CircleSnap'
+import { data } from "react-router-dom";
 
 const initialState = {
   nodes: [],
@@ -15,12 +16,14 @@ const initialState = {
     REGULATOR: { width: 60, height: 30 },
     STREETREGULATOR: { width: 60, height: 30 },
     REDUCER: { width: 60, height: 30 },
-    METER: { width: 60, height: 30 },
+    METER: { width: 60, height: 45 },
     GB: { width: 60, height: 30 },
     BRANCH: { width: 30, height: 30 },
     VALVE: { width: 60, height: 30 },
     SENSOR: { width: 50, height: 30 },
-    JOINT: { width: 30, height: 30 }
+    JOINT: { width: 30, height: 30 },
+    PRESSURESENSOR: {width:50, height: 30},
+    TEMPERATURESENSOR: {width:50, height: 30}
   };
 
 
@@ -44,16 +47,17 @@ const diagramSlice = createSlice({
 
     addNode(state, action) {
       // console.log(action.payload)
-      const { type, x = 200, y = 100} = action.payload;
+      const { type, x = 200, y = 100, readings = {temperature:0,pressure:0,volume:0}} = action.payload;
       const config = Node_def[type];
       state.nodes.push({
         id: `n-${nanoid()}`,
         type,
         x,
         y,
-        ...config 
+        ...config,
+        readings
       });
-      // console.log(state.config)
+      
 
     },
 
@@ -144,7 +148,7 @@ const diagramSlice = createSlice({
           offset: { x: 0, y: 0 },
           visible: false,
           editing: false
-        }
+        }        
       });
     },
 

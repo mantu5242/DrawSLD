@@ -173,43 +173,36 @@ const diagramSlice = createSlice({
     },
 
     syncArrowsWithNode(state, action) {
-    const node = action.payload;
+      const { id, x, y } = action.payload;
 
-    state.arrows.forEach(arrow => {
+      const node = state.nodes.find(n => n.id === id);
+      if (!node) return;
+
+      node.x = x;
+      node.y = y;
+
+      state.arrows.forEach(arrow => {
         const updatePort = (port) => {
-        if (!port.attachedTo) return port;
-        if (port.attachedTo.nodeId !== node.id) return port;
+          if (!port.attachedTo) return port;
+          if (port.attachedTo.nodeId !== node.id) return port;
 
-        const { side, index } = port.attachedTo;
+          const { side, index } = port.attachedTo;
 
-        // Circle node
-        if (node.radius) {
-            const snap = getCircleSnapPoint(
-            node,
-            port.x,
-            port.y
-            );
+          if (node.radius) {
+            const snap = getCircleSnapPoint(node, port.x, port.y);
+            return { ...snap, attachedTo: port.attachedTo };
+          }
 
-            return {
-            ...snap,
-            attachedTo: port.attachedTo
-            };
-        }
-
-        // Rectangle / others
-        const snap = getSnapPoint(node, side, index);
-
-        return {
-            ...snap,
-            attachedTo: port.attachedTo
-        };
+          const snap = getSnapPoint(node, side, index);
+          return { ...snap, attachedTo: port.attachedTo };
         };
 
         arrow.start = updatePort(arrow.start);
         arrow.end = updatePort(arrow.end);
-    });
+      });
     },
 
+    
     cleanupNodeArrows(state, action) {
         const nodeId = action.payload;
         state.arrows = state.arrows.filter(

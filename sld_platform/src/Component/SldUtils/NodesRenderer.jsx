@@ -2,7 +2,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSelected } from "../../Redux/SelectionSlice";
 import {
   updateNode,
-  resizeNode
+  resizeNode,
+  syncArrowsWithNode
 } from "../../Redux/DiagramSlice";
 
 import PrsNode from "../../Component/Symbols/PrsNode";
@@ -62,8 +63,13 @@ const NodesRenderer = ({
         onStartConnect={onStartConnect}
         onFinishConnect={onFinishConnect}
 
-        onDrag={(id, x, y) =>
-          dispatch(updateNode({ id, x, y }))
+        onDrag={(id, x, y, live) =>
+          // dispatch(updateNode({ id, x, y }))
+          {if (live) {
+            dispatch(syncArrowsWithNode({ id, x, y }));
+          } else {
+            dispatch(updateNode({ id, x, y }));
+          }}
         }
 
         onResize={(id, x, y, width, height, radius) =>

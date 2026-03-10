@@ -7,7 +7,10 @@ import undoable from 'redux-undo'
 export const store = configureStore({
   reducer: {
     // diagram: diagramReducer,
-    history: undoable(diagramReducer),
+    history: undoable(diagramReducer, {
+      // filter : (action) => !action.payload?.live            // when live(when node drags) history is not save
+      filter: (action) => action.type !== "diagram/syncArrowsWithNode"
+    }),
     ui: uiReducer,
     selection: selectionReducer
   },

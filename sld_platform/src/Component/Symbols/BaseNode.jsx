@@ -119,9 +119,12 @@ const BaseNode = ({
       onDragEnd={(e) => {
         e.cancelBubble = true;
         setIsDraggingNode(false);
+        onDrag(node.id, e.target.x(), e.target.y());
       }}
       onDragMove={(e) =>
-        onDrag(node.id, e.target.x(), e.target.y())
+       { 
+        onDrag(node.id, e.target.x(), e.target.y(), true);
+       }
       }
       // onMouseEnter={() => {
       //   setHovered(true);
